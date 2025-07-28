@@ -15,4 +15,8 @@
 
 https://github.com/advimman/lama
 
+4. Zero123++의 코드 저장소: 단일 이미지에서 일관된 다중 뷰 확산 기본 모델로.
+
+https://github.com/SUDO-AI-3D/zero123plus
+
 ...
