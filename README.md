@@ -19,4 +19,8 @@ https://github.com/advimman/lama
 
 https://github.com/SUDO-AI-3D/zero123plus
 
+5. 대규모 Hunyuan3D 확산 모델을 사용한 고해상도 3D 자산 생성.
+
+https://github.com/Tencent-Hunyuan/Hunyuan3D-2
+
 ...
