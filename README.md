@@ -24,3 +24,15 @@ https://github.com/SUDO-AI-3D/zero123plus
 https://github.com/Tencent-Hunyuan/Hunyuan3D-2
 
 ...
+
+[Lazarus에서 Python 연동방법 관련]
+
+1. Python-for-Lazarus
+
+https://github.com/Alexey-T/Python-for-Lazarus
+
+2. plyview
+
+https://github.com/neurolabusc/plyview
+
+...
