@@ -1,0 +1,3 @@
+
+yolov8n.pt file download : https://huggingface.co/Ultralytics/YOLOv8/blob/main/yolov8n.pt
+file size = 6,382kb
