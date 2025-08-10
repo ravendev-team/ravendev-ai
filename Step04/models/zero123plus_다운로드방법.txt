@@ -1,0 +1,20 @@
+모델 다운로드 방법:
+
+'zero123plus-pipeline' folder size : 16.9KB
+'zero123plus-v1.2' folder size : 5.19GB
+
+
+1. Hugging Face CLI 설치: pip install huggingface_hub
+2. 모델 다운로드:
+   huggingface-cli download sudo-ai/zero123plus-v1.2 --local-dir ./models/zero123plus-v1.2
+   huggingface-cli download sudo-ai/zero123plus-pipeline --local-dir ./models/zero123plus-pipeline
+
+오류 날때 해결방법
+pip install huggingface-hub==0.25.2
+pip install "diffusers>=0.29.0"
+
+
+또는 git으로 다운로드:
+   git lfs install
+   git clone https://huggingface.co/sudo-ai/zero123plus-v1.2 ./models/zero123plus-v1.2
+   git clone https://huggingface.co/sudo-ai/zero123plus-pipeline ./models/zero123plus-pipeline
