@@ -1,0 +1,4 @@
+
+https://huggingface.co/spaces/aryadytm/remove-photo-object/blob/f00f2d12ada635f5f30f18ed74200ea89dd26631/assets/big-lama.pt
+
+
