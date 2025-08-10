@@ -1,0 +1,2 @@
+
+emoji_dog.png 와 emoji_rabbit.png 는 chatGPT 에서 생성된 이미지입니다.
