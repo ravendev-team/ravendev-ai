@@ -12,7 +12,7 @@ class MosaicApp:
 
         # 파일 경로
         self.input_image_path = ""  # 동적으로 설정
-        self.emoji_image_path = "emoji_rabbit.png"  # Pixabay 토끼 마스크
+        self.emoji_image_path = "emoji_rabbit.png"  # emoji_dog.png 와 emoji_rabbit.png 는 chatGPT 에서 생성된 이미지입니다.
         self.output_image_path = "output.png"
 
         # GUI 요소
@@ -224,3 +224,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = MosaicApp(root)
     root.mainloop()
+
