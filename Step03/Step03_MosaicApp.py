@@ -55,9 +55,9 @@ class MosaicApp:
     def load_image(self):
         # 파일 대화상자에서 PNG, JPG 파일 선택
         file_path = filedialog.askopenfilename(
-            initialdir="D:/2025_proj/2025년_sw대회용/python_정리/Emoji_Mosaic/",
-            title="Select Image File",
-            filetypes=[("Image files", "*.png *.jpg *.jpeg")]
+            initialdir = "./",
+            title = "Select Image File",
+            filetypes = [("Image files", "*.png *.jpg *.jpeg")]
         )
         if not file_path:
             print("No file selected")
@@ -137,7 +137,7 @@ class MosaicApp:
 
     def apply_mosaic(self):
         if not self.input_pil or not os.path.exists(self.emoji_image_path):
-            print("Error: input image or emoji.png not found")
+            print(f"Error: input image or {self.emoji_image_path} not found")
             return
 
         # 색칠된 영역 분석 (캔버스 표시 이미지 크기)
@@ -224,4 +224,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = MosaicApp(root)
     root.mainloop()
+
 
