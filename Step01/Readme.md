@@ -30,6 +30,3 @@ opencv-python-headless       4.10.0.84 (import cv2 사용을 위해)
 배경 이미지 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/Step01/output/background.png' width=80 height=80 /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 객체 이미지 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/Step01/output/output_no_bg.png' width=80 height=80 /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 마스크 이미지 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/Step01/output/masks/debug_full_mask.png' width=80 height=80 /> 
-
-
-
