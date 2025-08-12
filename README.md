@@ -1,7 +1,7 @@
 # ravendev-ai
 2D이미지로부터의자유 프로젝트
 
-<img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI_2025-08-13.gif' />
+<img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13.gif' />
 
 
 
