@@ -1,6 +1,15 @@
 # ravendev-ai
 2D이미지로부터의자유 프로젝트
 
+<img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI_2025-08-13.gif' />
+
+
+
+
+
+
+
+
 [ 검토 AI 관련기술 사이트 리스트 ]
 
 1. Rembg는 이미지 배경을 제거하는 도구입니다.
@@ -25,14 +34,3 @@ https://github.com/Tencent-Hunyuan/Hunyuan3D-2
 
 ...
 
-[Lazarus에서 Python 연동방법 관련]
-
-1. Python-for-Lazarus
-
-https://github.com/Alexey-T/Python-for-Lazarus
-
-2. plyview
-
-https://github.com/neurolabusc/plyview
-
-...
