@@ -1,0 +1,6 @@
+D:\dev_works\2025_sw_final\GuideUI\NodeBasedGuideUI\obj\Debug\NodeBasedGuideUI.csprojResolveAssemblyReference.cache
+D:\dev_works\2025_sw_final\GuideUI\NodeBasedGuideUI\bin\Debug\NodeBasedGuideUI.exe.config
+D:\dev_works\2025_sw_final\GuideUI\NodeBasedGuideUI\bin\Debug\NodeBasedGuideUI.exe
+D:\dev_works\2025_sw_final\GuideUI\NodeBasedGuideUI\bin\Debug\NodeBasedGuideUI.pdb
+D:\dev_works\2025_sw_final\GuideUI\NodeBasedGuideUI\obj\Debug\NodeBasedGuideUI.exe
+D:\dev_works\2025_sw_final\GuideUI\NodeBasedGuideUI\obj\Debug\NodeBasedGuideUI.pdb
