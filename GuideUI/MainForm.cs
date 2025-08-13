@@ -28,6 +28,9 @@ namespace NodeBasedGuideUI
         private bool isPanning = false;
         private float zoomLevel = 1.0f;
         private Timer animationTimer;
+       
+        // 2025.08.13 : 1. 멤버 변수에 추가
+        private Dictionary<Image, bool> animatedImages = new Dictionary<Image, bool>(); 
 
         public List<Node> Nodes { get { return this.nodes; } }
         public List<Connection> Connections { get { return this.connections; } }
@@ -46,53 +49,69 @@ namespace NodeBasedGuideUI
             this.Paint += NodeCanvas_Paint;
             this.MouseWheel += NodeCanvas_MouseWheel;
             
-            // GIF 애니메이션을 위한 타이머 설정
-            animationTimer = new Timer();
-            animationTimer.Interval = 100; // 100ms 간격으로 업데이트
-            animationTimer.Tick += AnimationTimer_Tick;
-            animationTimer.Start();
+            // 2025.08.13 : 2. 생성자에서 타이머 간격 조정
+		    // GIF 애니메이션을 위한 타이머 설정 - 간격을 50ms로 줄임
+		    animationTimer = new Timer();
+		    animationTimer.Interval = 50; // 50ms 간격으로 업데이트 (더 부드러운 애니메이션)
+		    animationTimer.Tick += AnimationTimer_Tick;
+		    animationTimer.Start();
             
             AddProcessingNodes();
         }
         
-        private void AnimationTimer_Tick(object sender, EventArgs e)
-        {
-            bool hasAnimatedImages = false;
-            
-            // 모든 노드의 이미지들을 확인하여 GIF 애니메이션 업데이트
-            foreach (var node in nodes)
-            {
-                if (node.InputImages != null)
-                {
-                    foreach (var image in node.InputImages)
-                    {
-                        if (IsAnimatedGif(image))
-                        {
-                            ImageAnimator.UpdateFrames(image);
-                            hasAnimatedImages = true;
-                        }
-                    }
-                }
-                
-                if (node.OutputImages != null)
-                {
-                    foreach (var image in node.OutputImages)
-                    {
-                        if (IsAnimatedGif(image))
-                        {
-                            ImageAnimator.UpdateFrames(image);
-                            hasAnimatedImages = true;
-                        }
-                    }
-                }
-            }
-            
-            // 애니메이션이 있는 경우에만 다시 그리기
-            if (hasAnimatedImages)
-            {
-                this.Invalidate();
-            }
-        }
+		// 4. AnimationTimer_Tick 메서드 수정
+		private void AnimationTimer_Tick(object sender, EventArgs e)
+		{
+		    bool hasAnimatedImages = false;
+		    
+		    // 모든 노드의 이미지들을 확인하여 GIF 애니메이션 업데이트
+		    foreach (var node in nodes)
+		    {
+		        if (node.InputImages != null)
+		        {
+		            foreach (var image in node.InputImages)
+		            {
+		                if (image != null && IsAnimatedGif(image))
+		                {
+		                    // 애니메이션 등록이 안 되어 있으면 등록
+		                    if (!animatedImages.ContainsKey(image))
+		                    {
+		                        ImageAnimator.Animate(image, OnFrameChanged);
+		                        animatedImages[image] = true;
+		                    }
+		                    
+		                    ImageAnimator.UpdateFrames(image);
+		                    hasAnimatedImages = true;
+		                }
+		            }
+		        }
+		        
+		        if (node.OutputImages != null)
+		        {
+		            foreach (var image in node.OutputImages)
+		            {
+		                if (image != null && IsAnimatedGif(image))
+		                {
+		                    // 애니메이션 등록이 안 되어 있으면 등록
+		                    if (!animatedImages.ContainsKey(image))
+		                    {
+		                        ImageAnimator.Animate(image, OnFrameChanged);
+		                        animatedImages[image] = true;
+		                    }
+		                    
+		                    ImageAnimator.UpdateFrames(image);
+		                    hasAnimatedImages = true;
+		                }
+		            }
+		        }
+		    }
+		    
+		    // 애니메이션이 있는 경우에만 다시 그리기
+		    if (hasAnimatedImages)
+		    {
+		        this.Invalidate();
+		    }
+		}
         
         private void InitializeComponent()
         {
@@ -333,117 +352,219 @@ namespace NodeBasedGuideUI
             DrawNodePorts(g, node, nodeRect);
         }
         
-        private void DrawNodeImages(Graphics g, Node node, Rectangle nodeRect)
-        {
-            int imageY = nodeRect.Y + 35;
-            int imageSize = 60;
-            int spacing = 5;
-            
-            // Input 이미지들 표시
-            if (node.InputImages != null && node.InputImages.Count > 0)
-            {
-                using (Font font = new Font("Segoe UI", 8, FontStyle.Bold))
-                using (SolidBrush textBrush = new SolidBrush(Color.LightBlue))
-                {
-                    g.DrawString("INPUT", font, textBrush, nodeRect.X + 10, imageY - 15);
-                }
-                
-                int inputImagesPerRow = Math.Min(4, node.InputImages.Count);
-                int inputRowHeight = imageSize + spacing;
-                
-                for (int i = 0; i < node.InputImages.Count; i++)
-                {
-                    int row = i / inputImagesPerRow;
-                    int col = i % inputImagesPerRow;
-                    
-                    int x = nodeRect.X + 10 + col * (imageSize + spacing);
-                    int y = imageY + row * inputRowHeight;
-                    
-                    Rectangle imgRect = new Rectangle(x, y, imageSize, imageSize);
-                    
-                    if (node.InputImages[i] != null)
-                    {
-                        // GIF 애니메이션 시작
-                        if (IsAnimatedGif(node.InputImages[i]))
-                        {
-                            ImageAnimator.Animate(node.InputImages[i], OnFrameChanged);
-                        }
-                        
-                        g.DrawImage(node.InputImages[i], imgRect);
-                        
-                        string imageName = node.InputImageNames[i];
-                        if (!string.IsNullOrEmpty(imageName))
-                        {
-                            using (Font nameFont = new Font("Segoe UI", 6))
-                            using (SolidBrush nameBrush = new SolidBrush(Color.White))
-                            {
-                                g.DrawString(Path.GetFileNameWithoutExtension(imageName), 
-                                           nameFont, nameBrush, x, y + imageSize + 2);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        g.FillRectangle(Brushes.DarkGray, imgRect);
-                        g.DrawRectangle(Pens.Gray, imgRect);
-                    }
-                }
-                
-                imageY += ((node.InputImages.Count - 1) / inputImagesPerRow + 1) * inputRowHeight + 20;
-            }
-            
-            // Output 이미지들 표시
-            if (node.OutputImages != null && node.OutputImages.Count > 0)
-            {
-                using (Font font = new Font("Segoe UI", 8, FontStyle.Bold))
-                using (SolidBrush textBrush = new SolidBrush(Color.Orange))
-                {
-                    g.DrawString("OUTPUT", font, textBrush, nodeRect.X + 10, imageY - 15);
-                }
-                
-                int outputImagesPerRow = Math.Min(4, node.OutputImages.Count);
-                int outputRowHeight = imageSize + spacing;
-                
-                for (int i = 0; i < node.OutputImages.Count; i++)
-                {
-                    int row = i / outputImagesPerRow;
-                    int col = i % outputImagesPerRow;
-                    
-                    int x = nodeRect.X + 10 + col * (imageSize + spacing);
-                    int y = imageY + row * outputRowHeight;
-                    
-                    Rectangle imgRect = new Rectangle(x, y, imageSize, imageSize);
-                    
-                    if (node.OutputImages[i] != null)
-                    {
-                        // GIF 애니메이션 시작
-                        if (IsAnimatedGif(node.OutputImages[i]))
-                        {
-                            ImageAnimator.Animate(node.OutputImages[i], OnFrameChanged);
-                        }
-                        
-                        g.DrawImage(node.OutputImages[i], imgRect);
-                        
-                        string imageName = node.OutputImageNames[i];
-                        if (!string.IsNullOrEmpty(imageName))
-                        {
-                            using (Font nameFont = new Font("Segoe UI", 6))
-                            using (SolidBrush nameBrush = new SolidBrush(Color.White))
-                            {
-                                g.DrawString(Path.GetFileNameWithoutExtension(imageName), 
-                                           nameFont, nameBrush, x, y + imageSize + 2);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        g.FillRectangle(Brushes.DarkGray, imgRect);
-                        g.DrawRectangle(Pens.Gray, imgRect);
-                    }
-                }
-            }
-        }
-        
+		// 5. DrawNodeImages 메서드에서 GIF 처리 부분 수정
+		private void DrawNodeImages(Graphics g, Node node, Rectangle nodeRect)
+		{
+		    int imageY = nodeRect.Y + 35;
+		    int imageSize = 60;
+		    int spacing = 5;
+		    
+		    // Input 이미지들 표시
+		    if (node.InputImages != null && node.InputImages.Count > 0)
+		    {
+		        using (Font font = new Font("Segoe UI", 8, FontStyle.Bold))
+		        using (SolidBrush textBrush = new SolidBrush(Color.LightBlue))
+		        {
+		            g.DrawString("INPUT", font, textBrush, nodeRect.X + 10, imageY - 15);
+		        }
+		        
+		        int inputImagesPerRow = Math.Min(4, node.InputImages.Count);
+		        int inputRowHeight = imageSize + spacing;
+		        
+		        for (int i = 0; i < node.InputImages.Count; i++)
+		        {
+		            int row = i / inputImagesPerRow;
+		            int col = i % inputImagesPerRow;
+		            
+		            int x = nodeRect.X + 10 + col * (imageSize + spacing);
+		            int y = imageY + row * inputRowHeight;
+		            
+		            Rectangle imgRect = new Rectangle(x, y, imageSize, imageSize);
+		            
+		            if (node.InputImages[i] != null)
+		            {
+		                // GIF 애니메이션 등록 (중복 등록 방지)
+		                if (IsAnimatedGif(node.InputImages[i]) && !animatedImages.ContainsKey(node.InputImages[i]))
+		                {
+		                    ImageAnimator.Animate(node.InputImages[i], OnFrameChanged);
+		                    animatedImages[node.InputImages[i]] = true;
+		                }
+		                
+		                // 현재 프레임 그리기
+		                g.DrawImage(node.InputImages[i], imgRect);
+		                
+		                string imageName = node.InputImageNames[i];
+		                if (!string.IsNullOrEmpty(imageName))
+		                {
+		                    using (Font nameFont = new Font("Segoe UI", 6))
+		                    using (SolidBrush nameBrush = new SolidBrush(Color.White))
+		                    {
+		                        g.DrawString(Path.GetFileNameWithoutExtension(imageName), 
+		                                   nameFont, nameBrush, x, y + imageSize + 2);
+		                    }
+		                }
+		            }
+		            else
+		            {
+		                g.FillRectangle(Brushes.DarkGray, imgRect);
+		                g.DrawRectangle(Pens.Gray, imgRect);
+		            }
+		        }
+		        
+		        imageY += ((node.InputImages.Count - 1) / inputImagesPerRow + 1) * inputRowHeight + 20;
+		    }
+		    
+		    // Output 이미지들 표시
+		    if (node.OutputImages != null && node.OutputImages.Count > 0)
+		    {
+		        using (Font font = new Font("Segoe UI", 8, FontStyle.Bold))
+		        using (SolidBrush textBrush = new SolidBrush(Color.Orange))
+		        {
+		            g.DrawString("OUTPUT", font, textBrush, nodeRect.X + 10, imageY - 15);
+		        }
+		        
+		        // Step04와 Step05의 GIF 이미지 확대를 위한 계산
+		        bool hasGifInOutput = false;
+		        int gifIndex = -1;
+		        
+		        // GIF 파일이 있는지 확인
+		        if (node.Type == NodeType.Step04 || node.Type == NodeType.Step05)
+		        {
+		            for (int i = 0; i < node.OutputImages.Count; i++)
+		            {
+		                if (node.OutputImages[i] != null && IsAnimatedGif(node.OutputImages[i]))
+		                {
+		                    hasGifInOutput = true;
+		                    gifIndex = i;
+		                    break;
+		                }
+		            }
+		        }
+		        
+		        int outputImagesPerRow = Math.Min(4, node.OutputImages.Count);
+		        int outputRowHeight = imageSize + spacing;
+		        
+		        // GIF가 있는 경우 레이아웃 조정
+		        if (hasGifInOutput)
+		        {
+		            // 일반 이미지들 먼저 표시 (GIF 제외)
+		            int normalImageCount = 0;
+		            for (int i = 0; i < node.OutputImages.Count; i++)
+		            {
+		                if (i == gifIndex) continue; // GIF는 나중에 표시
+		                
+		                int row = normalImageCount / outputImagesPerRow;
+		                int col = normalImageCount % outputImagesPerRow;
+		                
+		                int x = nodeRect.X + 10 + col * (imageSize + spacing);
+		                int y = imageY + row * outputRowHeight;
+		                
+		                Rectangle imgRect = new Rectangle(x, y, imageSize, imageSize);
+		                
+		                if (node.OutputImages[i] != null)
+		                {
+		                    // 현재 프레임 그리기
+		                    g.DrawImage(node.OutputImages[i], imgRect);
+		                    
+		                    string imageName = node.OutputImageNames[i];
+		                    if (!string.IsNullOrEmpty(imageName))
+		                    {
+		                        using (Font nameFont = new Font("Segoe UI", 6))
+		                        using (SolidBrush nameBrush = new SolidBrush(Color.White))
+		                        {
+		                            g.DrawString(Path.GetFileNameWithoutExtension(imageName), 
+		                                       nameFont, nameBrush, x, y + imageSize + 2);
+		                        }
+		                    }
+		                }
+		                else
+		                {
+		                    g.FillRectangle(Brushes.DarkGray, imgRect);
+		                    g.DrawRectangle(Pens.Gray, imgRect);
+		                }
+		                
+		                normalImageCount++;
+		            }
+		            
+		            // 일반 이미지들 다음 줄에 GIF를 3배 크기로 표시
+		            int gifRowsUsed = (normalImageCount - 1) / outputImagesPerRow + 1;
+		            int gifY = imageY + gifRowsUsed * outputRowHeight + 10; // 약간의 여백 추가
+		            
+		            // GIF 크기 3배 (180x180)
+		            int gifSize = imageSize * 3;
+		            Rectangle gifRect = new Rectangle(nodeRect.X + 10, gifY, gifSize, gifSize);
+		            
+		            if (node.OutputImages[gifIndex] != null)
+		            {
+		                // GIF 애니메이션 등록 (중복 등록 방지)
+		                if (!animatedImages.ContainsKey(node.OutputImages[gifIndex]))
+		                {
+		                    ImageAnimator.Animate(node.OutputImages[gifIndex], OnFrameChanged);
+		                    animatedImages[node.OutputImages[gifIndex]] = true;
+		                }
+		                
+		                // 3배 크기로 GIF 그리기
+		                g.DrawImage(node.OutputImages[gifIndex], gifRect);
+		                
+		                string gifName = node.OutputImageNames[gifIndex];
+		                if (!string.IsNullOrEmpty(gifName))
+		                {
+		                    using (Font nameFont = new Font("Segoe UI", 8, FontStyle.Bold)) // 폰트도 크게
+		                    using (SolidBrush nameBrush = new SolidBrush(Color.Yellow)) // 노란색으로 강조
+		                    {
+		                        g.DrawString(Path.GetFileNameWithoutExtension(gifName), 
+		                                   nameFont, nameBrush, gifRect.X, gifRect.Y + gifSize + 5);
+		                    }
+		                }
+		            }
+		        }
+		        else
+		        {
+		            // GIF가 없는 경우 기존 방식으로 표시
+		            for (int i = 0; i < node.OutputImages.Count; i++)
+		            {
+		                int row = i / outputImagesPerRow;
+		                int col = i % outputImagesPerRow;
+		                
+		                int x = nodeRect.X + 10 + col * (imageSize + spacing);
+		                int y = imageY + row * outputRowHeight;
+		                
+		                Rectangle imgRect = new Rectangle(x, y, imageSize, imageSize);
+		                
+		                if (node.OutputImages[i] != null)
+		                {
+		                    // GIF 애니메이션 등록 (중복 등록 방지)
+		                    if (IsAnimatedGif(node.OutputImages[i]) && !animatedImages.ContainsKey(node.OutputImages[i]))
+		                    {
+		                        ImageAnimator.Animate(node.OutputImages[i], OnFrameChanged);
+		                        animatedImages[node.OutputImages[i]] = true;
+		                    }
+		                    
+		                    // 현재 프레임 그리기
+		                    g.DrawImage(node.OutputImages[i], imgRect);
+		                    
+		                    string imageName = node.OutputImageNames[i];
+		                    if (!string.IsNullOrEmpty(imageName))
+		                    {
+		                        using (Font nameFont = new Font("Segoe UI", 6))
+		                        using (SolidBrush nameBrush = new SolidBrush(Color.White))
+		                        {
+		                            g.DrawString(Path.GetFileNameWithoutExtension(imageName), 
+		                                       nameFont, nameBrush, x, y + imageSize + 2);
+		                        }
+		                    }
+		                }
+		                else
+		                {
+		                    g.FillRectangle(Brushes.DarkGray, imgRect);
+		                    g.DrawRectangle(Pens.Gray, imgRect);
+		                }
+		            }
+		        }
+		    }
+		}
+
+		
         private void DrawNodePorts(Graphics g, Node node, Rectangle nodeRect)
         {
             int portY = nodeRect.Bottom - 30;
@@ -473,27 +594,72 @@ namespace NodeBasedGuideUI
             }
         }
         
-        private int GetNodeWidth(Node node)
-        {
-            int maxImages = Math.Max(node.InputImages.Count, node.OutputImages.Count);
-            int imagesPerRow = Math.Min(4, maxImages);
-            return Math.Max(200, 20 + imagesPerRow * 65);
-        }
+		// GetNodeWidth 메서드도 수정하여 GIF 크기를 고려
+		private int GetNodeWidth(Node node)
+		{
+		    int maxImages = Math.Max(node.InputImages.Count, node.OutputImages.Count);
+		    int imagesPerRow = Math.Min(4, maxImages);
+		    int baseWidth = Math.Max(200, 20 + imagesPerRow * 65);
+		    
+		    // Step04나 Step05에서 GIF가 있는 경우 최소 너비 보장
+		    if ((node.Type == NodeType.Step04 || node.Type == NodeType.Step05) && node.OutputImages != null)
+		    {
+		        bool hasGif = false;
+		        foreach (var image in node.OutputImages)
+		        {
+		            if (image != null && IsAnimatedGif(image))
+		            {
+		                hasGif = true;
+		                break;
+		            }
+		        }
+		        
+		        if (hasGif)
+		        {
+		            // 3배 크기 GIF (180px) + 여백을 수용할 수 있는 최소 너비
+		            baseWidth = Math.Max(baseWidth, 200);
+		        }
+		    }
+		    
+		    return baseWidth;
+		}
         
-        private int GetNodeHeight(Node node)
-        {
-            int inputRows = node.InputImages != null ? (node.InputImages.Count - 1) / 4 + 1 : 0;
-            int outputRows = node.OutputImages != null ? (node.OutputImages.Count - 1) / 4 + 1 : 0;
-            
-            int baseHeight = 80;
-            int imageHeight = (inputRows + outputRows) * 80;
-            
-            if (inputRows > 0) imageHeight += 20;
-            if (outputRows > 0) imageHeight += 20;
-            
-            return Math.Max(baseHeight, baseHeight + imageHeight);
-        }
-        
+		// GetNodeHeight 메서드도 수정하여 GIF가 있을 때 노드 높이를 조정
+		private int GetNodeHeight(Node node)
+		{
+		    int inputRows = node.InputImages != null ? (node.InputImages.Count - 1) / 4 + 1 : 0;
+		    int outputRows = node.OutputImages != null ? (node.OutputImages.Count - 1) / 4 + 1 : 0;
+		    
+		    int baseHeight = 80;
+		    int imageHeight = (inputRows + outputRows) * 80;
+		    
+		    if (inputRows > 0) imageHeight += 20;
+		    if (outputRows > 0) imageHeight += 20;
+		    
+		    // Step04나 Step05에서 GIF가 있는 경우 추가 높이 계산
+		    if ((node.Type == NodeType.Step04 || node.Type == NodeType.Step05) && node.OutputImages != null)
+		    {
+		        bool hasGif = false;
+		        foreach (var image in node.OutputImages)
+		        {
+		            if (image != null && IsAnimatedGif(image))
+		            {
+		                hasGif = true;
+		                break;
+		            }
+		        }
+		        
+		        if (hasGif)
+		        {
+		            // 3배 크기 GIF (180px) + 여백 + 텍스트 공간
+		            imageHeight += 180 + 30;
+		        }
+		    }
+		    
+		    return Math.Max(baseHeight, baseHeight + imageHeight);
+		}        
+		
+		
         private Color GetNodeColor(NodeType type)
         {
             switch (type)
@@ -936,25 +1102,65 @@ namespace NodeBasedGuideUI
             
             this.Invalidate();
         }
+        
+        // 2025.08.13 : 3. OnFrameChanged 콜백 수정
         private void OnFrameChanged(object sender, EventArgs e)
         {
-            // GIF 프레임이 변경될 때 호출되는 콜백
-            this.Invalidate();
+		    // UI 스레드에서 안전하게 호출되도록 보장
+		    if (this.InvokeRequired)
+		    {
+		        this.BeginInvoke(new Action(() => this.Invalidate()));
+		    }
+		    else
+		    {
+		        this.Invalidate();
+		    }
         }
         
-        private bool IsAnimatedGif(Image image)
-        {
-            if (image == null) return false;
-            
-            // GIF 형식이고 프레임이 2개 이상인지 확인
-            if (image.RawFormat.Equals(ImageFormat.Gif))
-            {
-                var dimension = new FrameDimension(image.FrameDimensionsList[0]);
-                return image.GetFrameCount(dimension) > 1;
-            }
-            
-            return false;
-        }
+		// 6. IsAnimatedGif 메서드 개선
+		private bool IsAnimatedGif(Image image)
+		{
+		    if (image == null) return false;
+		    
+		    try
+		    {
+		        // GIF 형식이고 프레임이 2개 이상인지 확인
+		        if (image.RawFormat.Equals(ImageFormat.Gif))
+		        {
+		            var dimension = new FrameDimension(image.FrameDimensionsList[0]);
+		            int frameCount = image.GetFrameCount(dimension);
+		            return frameCount > 1;
+		        }
+		    }
+		    catch (Exception)
+		    {
+		        // 예외 발생 시 애니메이션 GIF가 아닌 것으로 처리
+		        return false;
+		    }
+		    
+		    return false;
+		}
+		
+
+		// 7. 리소스 정리를 위한 메서드 추가
+		public void CleanupAnimations()
+		{
+		    // 등록된 애니메이션 정리
+		    foreach (var image in animatedImages.Keys)
+		    {
+		        try
+		        {
+		            ImageAnimator.StopAnimate(image, OnFrameChanged);
+		        }
+		        catch (Exception)
+		        {
+		            // 정리 중 예외는 무시
+		        }
+		    }
+		    animatedImages.Clear();
+		}		
+		
+
     }
     
     public class Node
@@ -982,40 +1188,88 @@ namespace NodeBasedGuideUI
             OutputImageNames = new List<string>();
         }
         
-        public void LoadImages(string[] imageFileNames, bool isInput = true)
-        {
-            var images = isInput ? InputImages : OutputImages;
-            var imageNames = isInput ? InputImageNames : OutputImageNames;
-            
-            images.Clear();
-            imageNames.Clear();
-            
-            foreach (string fileName in imageFileNames)
-            {
-                try
-                {
-                    Image image;
-                    if (File.Exists(fileName))
-                    {
-                        image = Image.FromFile(fileName);
-                    }
-                    else
-                    {
-                        Color placeholderColor = GetPlaceholderColor(fileName);
-                        image = CreatePlaceholderImage(fileName, placeholderColor);
-                    }
-                    
-                    images.Add(image);
-                    imageNames.Add(fileName);
-                }
-                catch (Exception)
-                {
-                    Image errorImage = CreatePlaceholderImage("ERROR: " + fileName, Color.Red);
-                    images.Add(errorImage);
-                    imageNames.Add(fileName);
-                }
-            }
-        }
+        
+		// Node 클래스에 리소스 정리를 위한 메서드도 추가
+		public void Dispose()
+		{
+		    // Input 이미지들 정리
+		    foreach (var img in InputImages)
+		    {
+		        if (img != null)
+		        {
+		            img.Dispose();
+		        }
+		    }
+		    InputImages.Clear();
+		    
+		    // Output 이미지들 정리
+		    foreach (var img in OutputImages)
+		    {
+		        if (img != null)
+		        {
+		            img.Dispose();
+		        }
+		    }
+		    OutputImages.Clear();
+		}        
+
+		// 또는 더 안전한 방법으로 다음과 같이 수정할 수도 있습니다:
+		public void LoadImages(string[] imageFileNames, bool isInput = true)
+		{
+		    var images = isInput ? InputImages : OutputImages;
+		    var imageNames = isInput ? InputImageNames : OutputImageNames;
+		    
+		    // 기존 이미지들 정리
+		    foreach (var img in images)
+		    {
+		        if (img != null)
+		        {
+		            img.Dispose();
+		        }
+		    }
+		    
+		    images.Clear();
+		    imageNames.Clear();
+		    
+		    foreach (string fileName in imageFileNames)
+		    {
+		        try
+		        {
+		            Image image;
+		            if (File.Exists(fileName))
+		            {
+		                // 모든 이미지 파일을 바이트 배열로 읽어서 처리
+		                byte[] imageBytes = File.ReadAllBytes(fileName);
+		                using (MemoryStream originalStream = new MemoryStream(imageBytes))
+		                {
+		                    // 새로운 MemoryStream을 생성하여 Image 객체가 독립적으로 사용할 수 있도록 함
+		                    MemoryStream imageStream = new MemoryStream(imageBytes);
+		                    image = Image.FromStream(imageStream);
+		                }
+		            }
+		            else
+		            {
+		                Color placeholderColor = GetPlaceholderColor(fileName);
+		                image = CreatePlaceholderImage(fileName, placeholderColor);
+		            }
+		            
+		            images.Add(image);
+		            imageNames.Add(fileName);
+		        }
+		        catch (Exception ex)
+		        {
+		            // 상세한 예외 정보 출력
+		            System.Diagnostics.Debug.WriteLine("이미지 로드 실패:");
+		            System.Diagnostics.Debug.WriteLine("  파일명: "+ fileName);
+		            System.Diagnostics.Debug.WriteLine("  오류: " + ex.Message);
+		            System.Diagnostics.Debug.WriteLine("  스택 트레이스: " + ex.StackTrace);
+		            
+		            Image errorImage = CreatePlaceholderImage("ERROR: " + Path.GetFileName(fileName), Color.Red);
+		            images.Add(errorImage);
+		            imageNames.Add(fileName);
+		        }
+		    }
+		}
         
         public void SetInputImages(List<Image> images, List<string> imageNames)
         {
