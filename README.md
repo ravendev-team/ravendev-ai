@@ -34,3 +34,26 @@ https://github.com/Tencent-Hunyuan/Hunyuan3D-2
 
 ...
 
+
+[ 사용된 개발툴 유틸 정보 ]
+
+1. 개발툴
+
+python 3.10 : https://www.python.org/
+
+SharpDevelopment 5.1 C# : https://sourceforge.net/projects/sharpdevelop/
+
+
+
+2. 그래픽 툴
+
+Paint.net : https://www.getpaint.net/
+
+3. 캡쳐 툴
+
+gifcam : https://gifcam.en.softonic.com/?ex=RAMP-3406.5&rex=true
+
+
+
+
+
