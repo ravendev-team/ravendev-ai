@@ -6,7 +6,7 @@ PascalABC.NET 3.11 : https://www.pascalabc.net/en/
 
 * C# 소스코드를 pascal 버전으로 컨버팅 했습니다.
 
-3. 사용된 이미지파일들
+2. 사용된 이미지파일들
 
 Step01, Step02, Step03, Step04, Step05 의 각 스텝별 input, output 이미지들을
 
