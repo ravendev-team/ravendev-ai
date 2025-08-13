@@ -48,6 +48,7 @@ python 3.10 : https://www.python.org/
 
 SharpDevelopment 5.1 C# : https://sourceforge.net/projects/sharpdevelop/
 
+PascalABC.net 3.11 : https://www.pascalabc.net/en/
 
 
 2. 그래픽 툴
