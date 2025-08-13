@@ -1,6 +1,10 @@
 # ravendev-ai
 2D이미지로부터의자유 프로젝트
 
+GPU가 아니 CPU 베이스로 AI 관련 모델과 알고리즘을 적용하다 보니 실행후 결과물이 오래 걸리는 부분도 있어서
+
+input 이미지들과 output 이미지들을 GuideUI 에서 한눈에 알아보기 쉽게 적용해 봤습니다.
+
 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13.gif' />
 
 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13_02.gif' />
