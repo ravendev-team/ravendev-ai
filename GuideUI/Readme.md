@@ -16,6 +16,8 @@ images 폴더에 위치시키고 각 Step 별 상황에 맞게 노드베이스�
 
 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13.gif' />
 
+<img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13_02.gif' />
+
 이미지 처리 워크플로우 시스템
 
 사용법:
