@@ -3,7 +3,7 @@
 
 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13.gif' />
 
-
+<img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13_02.gif' />
 
 
 
