@@ -1,4 +1,4 @@
-GuideUI
+[ GuideUI ]
 
 1. 개발환경
 
