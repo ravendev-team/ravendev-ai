@@ -8,7 +8,7 @@ SharpDevelop 5.1 C# : https://sourceforge.net/projects/sharpdevelop/
 
 Step01, Step02, Step03, Step04, Step05 의 각 스텝별 input, output 이미지들을
 
-images 폴더에 위치시키고 각 Step 별 상황에 맞게 노드베이스를 배치
+images 폴더에 위치시키고 각 Step 별 상황에 맞게 노드 베이스를 배치
 
 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/NodeBaseUI_sc01.png' />
 
