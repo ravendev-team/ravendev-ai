@@ -1,4 +1,4 @@
-Step04 : 원본 이미지 1장에서 zero123plus 모델을 사용해서 MultiView 8장의 이미지와 gif 파일을 생성합니다.
+Step04 : Step01 output중 배경이 분리된 객체이미지 1장 ->  zero123plus 모델을 사용해서 MultiView 8장의 이미지와 gif 파일을 생성합니다.
 
 1. 개발환경
 
