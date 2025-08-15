@@ -16,7 +16,7 @@ numpy 1.26.4
 
 Pillow 9.5.0 ( from PIL import Image 사용을 위해)
 
-모델 big-lama.pt file size = 200,850kb ) download : https://huggingface.co/spaces/aryadytm/remove-photo-object/blob/f00f2d12ada635f5f30f18ed74200ea89dd26631/assets/big-lama.pt
+모델 big-lama.pt file ( size = 200,850kb ) download : https://huggingface.co/spaces/aryadytm/remove-photo-object/blob/f00f2d12ada635f5f30f18ed74200ea89dd26631/assets/big-lama.pt
 
 2. input 이미지
 
