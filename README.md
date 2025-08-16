@@ -50,6 +50,9 @@ SharpDevelopment 5.1 C# : https://sourceforge.net/projects/sharpdevelop/
 
 PascalABC.net 3.11 : https://www.pascalabc.net/en/
 
+Lazarus 4.2 : https://sourceforge.net/projects/lazarus/
+
+OpenJDK 11 : https://jdk.java.net/java-se-ri/11 
 
 2. 그래픽 툴
 
