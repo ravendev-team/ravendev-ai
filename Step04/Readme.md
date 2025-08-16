@@ -4,9 +4,15 @@ Step04 : Step01 output중 배경이 분리된 객체이미지 1장 ->  zero123pl
 
 python 3.10
 
-torch 2.6.0
+torch 2.1.0
 
-torchvision 0.19.0
+torchvision 0.16.0
+
+torchaudio 2.1.0
+
+transformers 4.54.0
+
+accelerate 0.24.0
 
 Pillow 9.5.0 ( from PIL import Image 사용을 위해)
 
