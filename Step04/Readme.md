@@ -6,6 +6,8 @@ python 3.10
 
 torch 2.6.0
 
+torchvision 0.19.0
+
 Pillow 9.5.0 ( from PIL import Image 사용을 위해)
 
 diffusers 0.34.0
