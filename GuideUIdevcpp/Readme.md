@@ -10,8 +10,7 @@ libgdiplus.a 라이브러리 위치 지정 :
 
 예시) D:\Embarcadero\Dev-Cpp\TDM-GCC-64\x86_64-w64-mingw32\lib\libgdiplus.a
 
-
-
+<img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUIdevcpp/GideUIdevcpp_sc02.png' width=480 height=480 />
 
 
 * C# 소스코드를 Dev-cpp 버전으로 컨버팅 했습니다.
