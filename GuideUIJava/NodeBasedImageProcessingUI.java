@@ -1,3 +1,7 @@
+/*
+ * Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+ *           https://github.com/ravendev-team/ravendev-ai
+ */
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.Timer;
@@ -22,7 +26,7 @@ public class NodeBasedImageProcessingUI extends JFrame {
     }
     
     private void initializeComponents() {
-        setTitle("ÀÌ¹ÌÁö Ã³¸® ¿öÅ©ÇÃ·Î¿ì - Node Based UI (Java)");
+        setTitle("ì´ë¯¸ì§€ ì²˜ë¦¬ ì›Œí¬í”Œë¡œìš° - Node Based UI (Java)");
         setSize(1400, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -39,16 +43,16 @@ public class NodeBasedImageProcessingUI extends JFrame {
     private void createMenuBar() {
         menuBar = new JMenuBar();
         
-        // ÆÄÀÏ ¸Ş´º
-        JMenu fileMenu = new JMenu("ÆÄÀÏ");
+        // íŒŒì¼ ë©”ë‰´
+        JMenu fileMenu = new JMenu("íŒŒì¼");
         
-        JMenuItem loadImageItem = new JMenuItem("¿øº» ÀÌ¹ÌÁö ·Îµå");
+        JMenuItem loadImageItem = new JMenuItem("ì›ë³¸ ì´ë¯¸ì§€ ë¡œë“œ");
         loadImageItem.addActionListener(this::loadImageAction);
         
-        JMenuItem saveAllItem = new JMenuItem("¸ğµç °á°ú ÀúÀå");
+        JMenuItem saveAllItem = new JMenuItem("ëª¨ë“  ê²°ê³¼ ì €ì¥");
         saveAllItem.addActionListener(this::saveAllAction);
         
-        JMenuItem exitItem = new JMenuItem("Á¾·á");
+        JMenuItem exitItem = new JMenuItem("ì¢…ë£Œ");
         exitItem.addActionListener(e -> System.exit(0));
         
         fileMenu.add(loadImageItem);
@@ -57,30 +61,30 @@ public class NodeBasedImageProcessingUI extends JFrame {
         fileMenu.addSeparator();
         fileMenu.add(exitItem);
         
-        // ÆíÁı ¸Ş´º
-        JMenu editMenu = new JMenu("ÆíÁı");
+        // í¸ì§‘ ë©”ë‰´
+        JMenu editMenu = new JMenu("í¸ì§‘");
         
-        JMenuItem clearConnectionsItem = new JMenuItem("¸ğµç ¿¬°á Á¦°Å");
+        JMenuItem clearConnectionsItem = new JMenuItem("ëª¨ë“  ì—°ê²° ì œê±°");
         clearConnectionsItem.addActionListener(this::clearConnectionsAction);
         
-        JMenuItem resetNodesItem = new JMenuItem("¸ğµç ³ëµå ¸®¼Â");
+        JMenuItem resetNodesItem = new JMenuItem("ëª¨ë“  ë…¸ë“œ ë¦¬ì…‹");
         resetNodesItem.addActionListener(this::resetNodesAction);
         
         editMenu.add(clearConnectionsItem);
         editMenu.add(resetNodesItem);
         
-        // º¸±â ¸Ş´º
-        JMenu viewMenu = new JMenu("º¸±â");
+        // ë³´ê¸° ë©”ë‰´
+        JMenu viewMenu = new JMenu("ë³´ê¸°");
         
-        JMenuItem resetViewItem = new JMenuItem("ºä ¸®¼Â");
+        JMenuItem resetViewItem = new JMenuItem("ë·° ë¦¬ì…‹");
         resetViewItem.addActionListener(e -> canvas.repaint());
         
         viewMenu.add(resetViewItem);
         
-        // µµ¿ò¸» ¸Ş´º
-        JMenu helpMenu = new JMenu("µµ¿ò¸»");
+        // ë„ì›€ë§ ë©”ë‰´
+        JMenu helpMenu = new JMenu("ë„ì›€ë§");
         
-        JMenuItem aboutItem = new JMenuItem("Á¤º¸");
+        JMenuItem aboutItem = new JMenuItem("ì •ë³´");
         aboutItem.addActionListener(this::aboutAction);
         
         helpMenu.add(aboutItem);
@@ -95,11 +99,11 @@ public class NodeBasedImageProcessingUI extends JFrame {
     
     private void createStatusBar() {
         JPanel statusPanel = new JPanel(new BorderLayout());
-        statusLabel = new JLabel("ÁØºñµÊ - ³ëµå¸¦ ¿¬°áÇÏ¿© ÀÌ¹ÌÁö Ã³¸® ¿öÅ©ÇÃ·Î¿ì¸¦ ½ÃÀÛÇÏ¼¼¿ä");
+        statusLabel = new JLabel("ì¤€ë¹„ë¨ - ë…¸ë“œë¥¼ ì—°ê²°í•˜ì—¬ ì´ë¯¸ì§€ ì²˜ë¦¬ ì›Œí¬í”Œë¡œìš°ë¥¼ ì‹œì‘í•˜ì„¸ìš”");
         statusLabel.setBorder(BorderFactory.createLoweredBevelBorder());
         statusPanel.add(statusLabel, BorderLayout.CENTER);
         
-        JLabel nodeCountLabel = new JLabel("³ëµå: " + canvas.getNodes().size() + "°³");
+        JLabel nodeCountLabel = new JLabel("ë…¸ë“œ: " + canvas.getNodes().size() + "ê°œ");
         nodeCountLabel.setBorder(BorderFactory.createLoweredBevelBorder());
         statusPanel.add(nodeCountLabel, BorderLayout.EAST);
         
@@ -108,8 +112,8 @@ public class NodeBasedImageProcessingUI extends JFrame {
     
     private void loadImageAction(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("ÀÌ¹ÌÁö ÆÄÀÏ", "jpg", "jpeg", "png", "bmp", "gif"));
-        fileChooser.setDialogTitle("¿øº» ÀÌ¹ÌÁö ¼±ÅÃ");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("ì´ë¯¸ì§€ íŒŒì¼", "jpg", "jpeg", "png", "bmp", "gif"));
+        fileChooser.setDialogTitle("ì›ë³¸ ì´ë¯¸ì§€ ì„ íƒ");
         
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
@@ -129,13 +133,13 @@ public class NodeBasedImageProcessingUI extends JFrame {
                     canvas.repaint();
                     
                     JOptionPane.showMessageDialog(this, 
-                        "ÀÌ¹ÌÁö°¡ ·ÎµåµÇ¾ú½À´Ï´Ù: " + selectedFile.getName(),
-                        "·Îµå ¿Ï·á", JOptionPane.INFORMATION_MESSAGE);
+                        "ì´ë¯¸ì§€ê°€ ë¡œë“œë˜ì—ˆìŠµë‹ˆë‹¤: " + selectedFile.getName(),
+                        "ë¡œë“œ ì™„ë£Œ", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this,
-                    "ÀÌ¹ÌÁö ·Îµå Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù:\n" + ex.getMessage(),
-                    "¿À·ù", JOptionPane.ERROR_MESSAGE);
+                    "ì´ë¯¸ì§€ ë¡œë“œ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤:\n" + ex.getMessage(),
+                    "ì˜¤ë¥˜", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -143,7 +147,7 @@ public class NodeBasedImageProcessingUI extends JFrame {
     private void saveAllAction(ActionEvent e) {
         JFileChooser folderChooser = new JFileChooser();
         folderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        folderChooser.setDialogTitle("°á°ú ÀÌ¹ÌÁöµéÀ» ÀúÀåÇÒ Æú´õ¸¦ ¼±ÅÃÇÏ¼¼¿ä");
+        folderChooser.setDialogTitle("ê²°ê³¼ ì´ë¯¸ì§€ë“¤ì„ ì €ì¥í•  í´ë”ë¥¼ ì„ íƒí•˜ì„¸ìš”");
         
         if (folderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
@@ -170,49 +174,49 @@ public class NodeBasedImageProcessingUI extends JFrame {
                 }
                 
                 JOptionPane.showMessageDialog(this,
-                    savedCount + "°³ÀÇ ÀÌ¹ÌÁö°¡ ÀúÀåµÇ¾ú½À´Ï´Ù.\nÀúÀå À§Ä¡: " + selectedFolder.getAbsolutePath(),
-                    "ÀúÀå ¿Ï·á", JOptionPane.INFORMATION_MESSAGE);
+                    savedCount + "ê°œì˜ ì´ë¯¸ì§€ê°€ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤.\nì €ì¥ ìœ„ì¹˜: " + selectedFolder.getAbsolutePath(),
+                    "ì €ì¥ ì™„ë£Œ", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this,
-                    "ÀÌ¹ÌÁö ÀúÀå Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù:\n" + ex.getMessage(),
-                    "¿À·ù", JOptionPane.ERROR_MESSAGE);
+                    "ì´ë¯¸ì§€ ì €ì¥ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤:\n" + ex.getMessage(),
+                    "ì˜¤ë¥˜", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
     
     private void clearConnectionsAction(ActionEvent e) {
         int result = JOptionPane.showConfirmDialog(this,
-            "¸ğµç ¿¬°áÀ» Á¦°ÅÇÏ½Ã°Ú½À´Ï±î?", "È®ÀÎ",
+            "ëª¨ë“  ì—°ê²°ì„ ì œê±°í•˜ì‹œê² ìŠµë‹ˆê¹Œ?", "í™•ì¸",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             
         if (result == JOptionPane.YES_OPTION) {
             canvas.clearAllConnections();
-            statusLabel.setText("¸ğµç ¿¬°áÀÌ Á¦°ÅµÇ¾ú½À´Ï´Ù");
+            statusLabel.setText("ëª¨ë“  ì—°ê²°ì´ ì œê±°ë˜ì—ˆìŠµë‹ˆë‹¤");
         }
     }
     
     private void resetNodesAction(ActionEvent e) {
         int result = JOptionPane.showConfirmDialog(this,
-            "¸ğµç ³ëµå¸¦ ÃÊ±â »óÅÂ·Î ¸®¼ÂÇÏ½Ã°Ú½À´Ï±î?", "È®ÀÎ",
+            "ëª¨ë“  ë…¸ë“œë¥¼ ì´ˆê¸° ìƒíƒœë¡œ ë¦¬ì…‹í•˜ì‹œê² ìŠµë‹ˆê¹Œ?", "í™•ì¸",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             
         if (result == JOptionPane.YES_OPTION) {
             canvas.resetAllNodes();
-            statusLabel.setText("¸ğµç ³ëµå°¡ ¸®¼ÂµÇ¾ú½À´Ï´Ù");
+            statusLabel.setText("ëª¨ë“  ë…¸ë“œê°€ ë¦¬ì…‹ë˜ì—ˆìŠµë‹ˆë‹¤");
         }
     }
     
     private void aboutAction(ActionEvent e) {
         JOptionPane.showMessageDialog(this,
-            "ÀÌ¹ÌÁö Ã³¸® ¿öÅ©ÇÃ·Î¿ì ½Ã½ºÅÛ\n\n" +
-            "»ç¿ë¹ı:\n" +
-            "1. ³ëµå¸¦ µå·¡±×ÇÏ¿© ÀÌµ¿\n" +
-            "2. Ãâ·Â Æ÷Æ®¿¡¼­ ÀÔ·Â Æ÷Æ®·Î ¿¬°á\n" +
-            "3. ¿¬°á¼±À» ¿ìÅ¬¸¯ÇÏ¿© Á¦°Å\n" +
-            "4. ¸¶¿ì½º ÈÙ·Î È®´ë/Ãà¼Ò\n" +
-            "5. °¡¿îµ¥ ¹öÆ°À¸·Î Äµ¹ö½º ÀÌµ¿\n\n" +
-            "°¢ ´Ü°èº°·Î ÀÌ¹ÌÁö°¡ ÀÚµ¿ Ã³¸®µË´Ï´Ù.",
-            "Á¤º¸", JOptionPane.INFORMATION_MESSAGE);
+            "ì´ë¯¸ì§€ ì²˜ë¦¬ ì›Œí¬í”Œë¡œìš° ì‹œìŠ¤í…œ\n\n" +
+            "ì‚¬ìš©ë²•:\n" +
+            "1. ë…¸ë“œë¥¼ ë“œë˜ê·¸í•˜ì—¬ ì´ë™\n" +
+            "2. ì¶œë ¥ í¬íŠ¸ì—ì„œ ì…ë ¥ í¬íŠ¸ë¡œ ì—°ê²°\n" +
+            "3. ì—°ê²°ì„ ì„ ìš°í´ë¦­í•˜ì—¬ ì œê±°\n" +
+            "4. ë§ˆìš°ìŠ¤ íœ ë¡œ í™•ëŒ€/ì¶•ì†Œ\n" +
+            "5. ê°€ìš´ë° ë²„íŠ¼ìœ¼ë¡œ ìº”ë²„ìŠ¤ ì´ë™\n\n" +
+            "ê° ë‹¨ê³„ë³„ë¡œ ì´ë¯¸ì§€ê°€ ìë™ ì²˜ë¦¬ë©ë‹ˆë‹¤.",
+            "ì •ë³´", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public static void main(String[] args) {
@@ -228,7 +232,7 @@ public class NodeBasedImageProcessingUI extends JFrame {
     }
 }
 
-// ================= NodeCanvas Å¬·¡½º =================
+// ================= NodeCanvas í´ë˜ìŠ¤ =================
 class NodeCanvas extends JPanel {
     private List<Node> nodes = new ArrayList<>();
     private List<Connection> connections = new ArrayList<>();
@@ -317,42 +321,42 @@ class NodeCanvas extends JPanel {
     }
     
     private boolean isAnimatedGif(BufferedImage image) {
-        // Java¿¡¼­ GIF ¾Ö´Ï¸ŞÀÌ¼Ç °¨Áö´Â º¹ÀâÇÏ¹Ç·Î ´Ü¼øÈ­
+        // Javaì—ì„œ GIF ì• ë‹ˆë©”ì´ì…˜ ê°ì§€ëŠ” ë³µì¡í•˜ë¯€ë¡œ ë‹¨ìˆœí™”
         return false;
     }
     
     private void addProcessingNodes() {
-        // ¿øº» ÀÌ¹ÌÁö ³ëµå
-        Node originalNode = new Node("¿øº»ÀÌ¹ÌÁö", new Point(50, 30), NodeType.ORIGINAL);
+        // ì›ë³¸ ì´ë¯¸ì§€ ë…¸ë“œ
+        Node originalNode = new Node("ì›ë³¸ì´ë¯¸ì§€", new Point(50, 30), NodeType.ORIGINAL);
         originalNode.getOutputPorts().add(new NodePort("Output", PortType.OUTPUT, originalNode));
         originalNode.loadImages(new String[]{"images/input.png"}, false);
         nodes.add(originalNode);
         
-        // Step01 ³ëµå
+        // Step01 ë…¸ë“œ
         Node step01Node = new Node("Step01", new Point(300, 30), NodeType.STEP01);
         step01Node.getInputPorts().add(new NodePort("Input", PortType.INPUT, step01Node));
         step01Node.getOutputPorts().add(new NodePort("Output", PortType.OUTPUT, step01Node));
         nodes.add(step01Node);
         
-        // Step02 ³ëµå
+        // Step02 ë…¸ë“œ
         Node step02Node = new Node("Step02", new Point(600, 30), NodeType.STEP02);
         step02Node.getInputPorts().add(new NodePort("Input", PortType.INPUT, step02Node));
         step02Node.getOutputPorts().add(new NodePort("Output", PortType.OUTPUT, step02Node));
         nodes.add(step02Node);
         
-        // Step03 ³ëµå
+        // Step03 ë…¸ë“œ
         Node step03Node = new Node("Step03", new Point(300, 330), NodeType.STEP03);
         step03Node.getInputPorts().add(new NodePort("Input", PortType.INPUT, step03Node));
         step03Node.getOutputPorts().add(new NodePort("Output", PortType.OUTPUT, step03Node));
         nodes.add(step03Node);
         
-        // Step04 ³ëµå
+        // Step04 ë…¸ë“œ
         Node step04Node = new Node("Step04", new Point(600, 330), NodeType.STEP04);
         step04Node.getInputPorts().add(new NodePort("Input", PortType.INPUT, step04Node));
         step04Node.getOutputPorts().add(new NodePort("Output", PortType.OUTPUT, step04Node));
         nodes.add(step04Node);
         
-        // Step05 ³ëµå
+        // Step05 ë…¸ë“œ
         Node step05Node = new Node("Step05", new Point(900, 330), NodeType.STEP05);
         step05Node.getInputPorts().add(new NodePort("Input", PortType.INPUT, step05Node));
         step05Node.getOutputPorts().add(new NodePort("Output", PortType.OUTPUT, step05Node));
@@ -367,7 +371,7 @@ class NodeCanvas extends JPanel {
             return;
         }
         
-        // ¿ìÅ¬¸¯ ½Ã ¿¬°á¼± Á¦°Å È®ÀÎ
+        // ìš°í´ë¦­ ì‹œ ì—°ê²°ì„  ì œê±° í™•ì¸
         if (SwingUtilities.isRightMouseButton(e)) {
             Connection clickedConnection = getConnectionAtPosition(e.getPoint());
             if (clickedConnection != null) {
@@ -376,7 +380,7 @@ class NodeCanvas extends JPanel {
                 return;
             }
             
-            // ¿¬°á »ı¼º Ãë¼Ò
+            // ì—°ê²° ìƒì„± ì·¨ì†Œ
             if (connectionStartPort != null) {
                 connectionStartPort = null;
                 repaint();
@@ -384,13 +388,13 @@ class NodeCanvas extends JPanel {
             }
         }
         
-        // Æ÷Æ® Å¬¸¯ È®ÀÎ
+        // í¬íŠ¸ í´ë¦­ í™•ì¸
         NodePort clickedPort = getPortAtPosition(e.getPoint());
         if (clickedPort != null && SwingUtilities.isLeftMouseButton(e)) {
             if (connectionStartPort == null) {
                 connectionStartPort = clickedPort;
             } else {
-                // ¿¬°á »ı¼º
+                // ì—°ê²° ìƒì„±
                 if (canConnect(connectionStartPort, clickedPort)) {
                     connections.add(new Connection(connectionStartPort, clickedPort));
                     processImageFlow(connectionStartPort, clickedPort);
@@ -401,7 +405,7 @@ class NodeCanvas extends JPanel {
             return;
         }
         
-        // ³ëµå Å¬¸¯ È®ÀÎ
+        // ë…¸ë“œ í´ë¦­ í™•ì¸
         if (SwingUtilities.isLeftMouseButton(e)) {
             draggedNode = getNodeAtPosition(e.getPoint());
             if (draggedNode != null) {
@@ -456,17 +460,17 @@ class NodeCanvas extends JPanel {
         
         drawGrid(g2d);
         
-        // ¿¬°á¼± ±×¸®±â
+        // ì—°ê²°ì„  ê·¸ë¦¬ê¸°
         for (Connection connection : connections) {
             drawConnection(g2d, connection);
         }
         
-        // ÀÓ½Ã ¿¬°á¼± ±×¸®±â
+        // ì„ì‹œ ì—°ê²°ì„  ê·¸ë¦¬ê¸°
         if (connectionStartPort != null) {
             drawTempConnection(g2d, connectionStartPort, lastMousePos);
         }
         
-        // ³ëµå ±×¸®±â
+        // ë…¸ë“œ ê·¸ë¦¬ê¸°
         for (Node node : nodes) {
             drawNode(g2d, node);
         }
@@ -503,7 +507,7 @@ class NodeCanvas extends JPanel {
             Math.max(0, nodeColor.getBlue() - 20)
         );
         
-        // ±×¶óµğ¾ğÆ® ¹è°æ
+        // ê·¸ë¼ë””ì–¸íŠ¸ ë°°ê²½
         GradientPaint gradient = new GradientPaint(
             nodeRect.x, nodeRect.y, nodeColor,
             nodeRect.x, nodeRect.y + nodeRect.height, darkerColor
@@ -511,12 +515,12 @@ class NodeCanvas extends JPanel {
         g2d.setPaint(gradient);
         g2d.fillRoundRect(nodeRect.x, nodeRect.y, nodeRect.width, nodeRect.height, 8, 8);
         
-        // Å×µÎ¸®
+        // í…Œë‘ë¦¬
         g2d.setColor(new Color(150, 150, 154));
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRoundRect(nodeRect.x, nodeRect.y, nodeRect.width, nodeRect.height, 8, 8);
         
-        // Á¦¸ñ
+        // ì œëª©
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("SansSerif", Font.BOLD, 11));
         FontMetrics fm = g2d.getFontMetrics();
@@ -533,7 +537,7 @@ class NodeCanvas extends JPanel {
         int imageSize = 60;
         int spacing = 5;
         
-        // Input ÀÌ¹ÌÁöµé Ç¥½Ã
+        // Input ì´ë¯¸ì§€ë“¤ í‘œì‹œ
         if (node.getInputImages() != null && !node.getInputImages().isEmpty()) {
             g2d.setColor(Color.CYAN);
             g2d.setFont(new Font("SansSerif", Font.BOLD, 8));
@@ -572,7 +576,7 @@ class NodeCanvas extends JPanel {
             imageY += ((node.getInputImages().size() - 1) / inputImagesPerRow + 1) * inputRowHeight + 20;
         }
         
-        // Output ÀÌ¹ÌÁöµé Ç¥½Ã
+        // Output ì´ë¯¸ì§€ë“¤ í‘œì‹œ
         if (node.getOutputImages() != null && !node.getOutputImages().isEmpty()) {
             g2d.setColor(Color.ORANGE);
             g2d.setFont(new Font("SansSerif", Font.BOLD, 8));
@@ -588,7 +592,7 @@ class NodeCanvas extends JPanel {
                 int y = imageY + row * (imageSize + spacing);
                 
                 if (node.getOutputImages().get(i) != null) {
-                    // GIF ÆÄÀÏÀÎ °æ¿ì ´õ Å©°Ô Ç¥½Ã
+                    // GIF íŒŒì¼ì¸ ê²½ìš° ë” í¬ê²Œ í‘œì‹œ
                     if ((node.getType() == NodeType.STEP04 || node.getType() == NodeType.STEP05) && 
                         i < node.getOutputImageNames().size() && 
                         node.getOutputImageNames().get(i).toLowerCase().endsWith(".gif")) {
@@ -634,7 +638,7 @@ class NodeCanvas extends JPanel {
     private void drawNodePorts(Graphics2D g2d, Node node, Rectangle nodeRect) {
         int portY = nodeRect.y + nodeRect.height - 30;
         
-        // Input Æ÷Æ®
+        // Input í¬íŠ¸
         for (NodePort port : node.getInputPorts()) {
             Point portPos = new Point(nodeRect.x - 8, portY);
             drawPort(g2d, port, portPos);
@@ -644,7 +648,7 @@ class NodeCanvas extends JPanel {
             g2d.drawString(port.getName(), nodeRect.x + 15, portY + 5);
         }
         
-        // Output Æ÷Æ®
+        // Output í¬íŠ¸
         for (NodePort port : node.getOutputPorts()) {
             Point portPos = new Point(nodeRect.x + nodeRect.width - 8, portY);
             drawPort(g2d, port, portPos);
@@ -727,7 +731,7 @@ class NodeCanvas extends JPanel {
         int imagesPerRow = Math.min(4, maxImages);
         int baseWidth = Math.max(200, 20 + imagesPerRow * 65);
         
-        // Step04³ª Step05¿¡¼­ GIF°¡ ÀÖ´Â °æ¿ì ÃÖ¼Ò ³Êºñ º¸Àå
+        // Step04ë‚˜ Step05ì—ì„œ GIFê°€ ìˆëŠ” ê²½ìš° ìµœì†Œ ë„ˆë¹„ ë³´ì¥
         if ((node.getType() == NodeType.STEP04 || node.getType() == NodeType.STEP05) && 
             node.getOutputImages() != null) {
             boolean hasGif = false;
@@ -759,7 +763,7 @@ class NodeCanvas extends JPanel {
         if (inputRows > 0) imageHeight += 20;
         if (outputRows > 0) imageHeight += 20;
         
-        // Step04³ª Step05¿¡¼­ GIF°¡ ÀÖ´Â °æ¿ì Ãß°¡ ³ôÀÌ °è»ê
+        // Step04ë‚˜ Step05ì—ì„œ GIFê°€ ìˆëŠ” ê²½ìš° ì¶”ê°€ ë†’ì´ ê³„ì‚°
         if ((node.getType() == NodeType.STEP04 || node.getType() == NodeType.STEP05) && 
             node.getOutputImages() != null) {
             boolean hasGif = false;
@@ -772,7 +776,7 @@ class NodeCanvas extends JPanel {
             }
             
             if (hasGif) {
-                imageHeight += 120; // GIF È®´ë¸¦ À§ÇÑ Ãß°¡ °ø°£
+                imageHeight += 120; // GIF í™•ëŒ€ë¥¼ ìœ„í•œ ì¶”ê°€ ê³µê°„
             }
         }
         
@@ -951,7 +955,7 @@ class NodeCanvas extends JPanel {
                     List<BufferedImage> combinedImages = new ArrayList<>(fromNode.getOutputImages());
                     List<String> combinedNames = new ArrayList<>(fromNode.getOutputImageNames());
                     
-                    // emoji_rabbit.png ÀÌ¹ÌÁö ·Îµå
+                    // emoji_rabbit.png ì´ë¯¸ì§€ ë¡œë“œ
                     BufferedImage emojiImage = loadEmojiImage();
                     combinedImages.add(emojiImage);
                     combinedNames.add("emoji_rabbit.png");
@@ -1016,17 +1020,17 @@ class NodeCanvas extends JPanel {
             if (emojiFile.exists()) {
                 return ImageIO.read(emojiFile);
             } else {
-                // »ó´ë °æ·Î·Îµµ ½Ãµµ
+                // ìƒëŒ€ ê²½ë¡œë¡œë„ ì‹œë„
                 emojiFile = new File(System.getProperty("user.dir"), emojiPath);
                 if (emojiFile.exists()) {
                     return ImageIO.read(emojiFile);
                 }
             }
         } catch (IOException e) {
-            System.err.println("ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ: " + emojiPath + " - " + e.getMessage());
+            System.err.println("ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨: " + emojiPath + " - " + e.getMessage());
         }
         
-        // ÆÄÀÏÀÌ ¾øÀ¸¸é ÇÃ·¹ÀÌ½ºÈ¦´õ »ı¼º
+        // íŒŒì¼ì´ ì—†ìœ¼ë©´ í”Œë ˆì´ìŠ¤í™€ë” ìƒì„±
         return createPlaceholderImage("emoji_rabbit.png", Color.YELLOW);
     }
     
@@ -1116,7 +1120,7 @@ class NodeCanvas extends JPanel {
     }
 }
 
-// ================= Node Å¬·¡½º =================
+// ================= Node í´ë˜ìŠ¤ =================
 class Node {
     private String title;
     private Point position;
@@ -1160,7 +1164,7 @@ class Node {
         List<BufferedImage> images = isInput ? inputImages : outputImages;
         List<String> imageNames = isInput ? inputImageNames : outputImageNames;
         
-        // ±âÁ¸ ÀÌ¹ÌÁöµé Á¤¸®
+        // ê¸°ì¡´ ì´ë¯¸ì§€ë“¤ ì •ë¦¬
         images.clear();
         imageNames.clear();
         
@@ -1172,7 +1176,7 @@ class Node {
                 if (imageFile.exists()) {
                     image = ImageIO.read(imageFile);
                 } else {
-                    // »ó´ë °æ·Î·Îµµ ½Ãµµ
+                    // ìƒëŒ€ ê²½ë¡œë¡œë„ ì‹œë„
                     imageFile = new File(System.getProperty("user.dir"), fileName);
                     if (imageFile.exists()) {
                         image = ImageIO.read(imageFile);
@@ -1185,9 +1189,9 @@ class Node {
                 images.add(image);
                 imageNames.add(fileName);
             } catch (IOException ex) {
-                System.err.println("ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ:");
-                System.err.println("  ÆÄÀÏ¸í: " + fileName);
-                System.err.println("  ¿À·ù: " + ex.getMessage());
+                System.err.println("ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨:");
+                System.err.println("  íŒŒì¼ëª…: " + fileName);
+                System.err.println("  ì˜¤ë¥˜: " + ex.getMessage());
                 
                 BufferedImage errorImage = createPlaceholderImage("ERROR: " + getFileNameOnly(fileName), Color.RED);
                 images.add(errorImage);
@@ -1271,7 +1275,7 @@ class Node {
     }
     
     public void dispose() {
-        // Input ÀÌ¹ÌÁöµé Á¤¸®
+        // Input ì´ë¯¸ì§€ë“¤ ì •ë¦¬
         for (BufferedImage img : inputImages) {
             if (img != null) {
                 img.flush();
@@ -1279,7 +1283,7 @@ class Node {
         }
         inputImages.clear();
         
-        // Output ÀÌ¹ÌÁöµé Á¤¸®
+        // Output ì´ë¯¸ì§€ë“¤ ì •ë¦¬
         for (BufferedImage img : outputImages) {
             if (img != null) {
                 img.flush();
@@ -1289,7 +1293,7 @@ class Node {
     }
 }
 
-// ================= NodeType ¿­°ÅÇü =================
+// ================= NodeType ì—´ê±°í˜• =================
 enum NodeType {
     ORIGINAL,
     STEP01,
@@ -1299,7 +1303,7 @@ enum NodeType {
     STEP05
 }
 
-// ================= NodePort Å¬·¡½º =================
+// ================= NodePort í´ë˜ìŠ¤ =================
 class NodePort {
     private String name;
     private PortType type;
@@ -1325,13 +1329,13 @@ class NodePort {
     public void setBounds(Rectangle bounds) { this.bounds = bounds; }
 }
 
-// ================= PortType ¿­°ÅÇü =================
+// ================= PortType ì—´ê±°í˜• =================
 enum PortType {
     INPUT,
     OUTPUT
 }
 
-// ================= Connection Å¬·¡½º =================
+// ================= Connection í´ë˜ìŠ¤ =================
 class Connection {
     private NodePort outputPort;
     private NodePort inputPort;
@@ -1353,4 +1357,5 @@ class Connection {
     // Setters
     public void setOutputPort(NodePort outputPort) { this.outputPort = outputPort; }
     public void setInputPort(NodePort inputPort) { this.inputPort = inputPort; }
+
 }
