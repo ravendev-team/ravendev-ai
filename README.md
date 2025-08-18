@@ -54,6 +54,10 @@ Lazarus 4.2 : https://sourceforge.net/projects/lazarus/
 
 OpenJDK 11 : https://jdk.java.net/java-se-ri/11 
 
+Embarcadero Dev-Cpp 6.3 : https://sourceforge.net/projects/embarcadero-devcpp/
+
+g95 0.93 ( Fortran ) : g95-Mingw_201210.exe
+
 2. 그래픽 툴
 
 Paint.net : https://www.getpaint.net/
