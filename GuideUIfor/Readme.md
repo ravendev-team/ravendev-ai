@@ -15,7 +15,7 @@ compile_opengl.bat node_gui03
 
 <img src = 'https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUIfor/GuideUIfor_sc01.png' />
 
-2. 사용된 이미지파일들 <- 현재 이미지 와 gif 파일 보이는 기능은 아직 지원되지 않습니다.
+2. 사용된 이미지파일들 <- 현재 jpg, png 이미지 와 gif 파일 보이는 기능은 아직 지원되지 않습니다.
 
 Step01, Step02, Step03, Step04, Step05 의 각 스텝별 input, output 이미지들을
 
