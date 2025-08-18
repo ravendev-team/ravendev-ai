@@ -2,7 +2,9 @@
 MultiView -> Voxel Carving -> Poisson -> Denoise -> Taubin Smoothing -> Multi-view Vertex Coloring
 Save result -> multiview_poisson_colored.ply
 """
-
+## Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+##           https://github.com/ravendev-team/ravendev-ai 
+##
 import numpy as np
 from PIL import Image
 import open3d as o3d
@@ -243,3 +245,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
