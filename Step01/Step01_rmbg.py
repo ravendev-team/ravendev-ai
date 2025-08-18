@@ -1,3 +1,5 @@
+## Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+##           https://github.com/ravendev-team/ravendev-ai 
 from rembg import remove
 from PIL import Image
 import numpy as np
@@ -52,3 +54,4 @@ background_img.save(background_path)
 # 디버깅 출력
 cv2.imwrite(f"{output_dir}/debug_input_array.png", cv2.cvtColor(input_array, cv2.COLOR_RGBA2BGRA))
 cv2.imwrite(f"{mask_dir}/debug_full_mask.png", full_mask * 255)
+
