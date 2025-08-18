@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+## Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+##           https://github.com/ravendev-team/ravendev-ai 
+##
 """
 Zero123++ CPU 기반 예제 - 각 각도별 개별 이미지 저장
 사전에 다운로드한 모델 파일을 사용하여 실행
@@ -787,3 +790,4 @@ if __name__ == "__main__":
         # 기본 메인 실행
         #main()
         main(model_path, pipeline_path, input_image)
+
