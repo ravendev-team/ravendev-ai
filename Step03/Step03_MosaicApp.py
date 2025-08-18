@@ -1,3 +1,6 @@
+## Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+##           https://github.com/ravendev-team/ravendev-ai 
+##
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageDraw, ImageTk
@@ -224,5 +227,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = MosaicApp(root)
     root.mainloop()
+
 
 
