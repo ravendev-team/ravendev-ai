@@ -21,6 +21,8 @@ Step01, Step02, Step03, Step04, Step05 의 각 스텝별 input, output 이미지
 
 images 폴더에 위치시키고 각 Step 별 상황에 맞게 노드 베이스를 배치 (C# 버전과 images 폴더 위치는 같습니다.)
 
+* png 파일들은 bmp 로 변환해서 저장, gif 파일들은 제외 
+
 <img src = 'https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUIfor/GuideUIfor_sc02.gif' />
 
 
