@@ -1,6 +1,7 @@
 ﻿/*
  * Created by SharpDevelop.
- * User: dwfree74@naver.com
+ * Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+ *           https://github.com/ravendev-team/ravendev-ai
  * Date: 2025-08-13
  * Time: 오전 1:57
  * 
@@ -1670,3 +1671,4 @@ namespace NodeBasedGuideUI
 		
 	}
 }
+
