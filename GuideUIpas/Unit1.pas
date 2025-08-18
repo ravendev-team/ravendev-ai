@@ -1,4 +1,6 @@
-﻿unit Unit1;
+// Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+//           https://github.com/ravendev-team/ravendev-ai
+ unit Unit1;
 
 {$reference 'System.Windows.Forms.dll'}
 {$reference 'System.Drawing.dll'}
@@ -2080,5 +2082,6 @@ begin
   path.CloseFigure();
   Result := path;
 end;
+
 
 end.
