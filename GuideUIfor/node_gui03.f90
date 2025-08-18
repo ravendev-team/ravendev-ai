@@ -6,421 +6,381 @@
 !           https://github.com/ravendev-team/ravendev-ai
 !---------------------------------------------------------------
 
+! 이 버전의 수정 사항:
+! - 클릭 간에 connect_mode 유지(동일 이벤트에서 자동 취소 없음)
+! - 입력 포트 hit 테스트 강화(더 큰 hit박스 + 디버그 로그)
+! - 메뉴 + 확대/축소/이동 + 드래그 + 동적 연결을 포함한 명확하고 간단한 예시
+!
 module node_gui_data
+    use iso_c_binding
     implicit none
-    
-    ! Window dimensions
-    integer, parameter :: WINDOW_WIDTH = 800
+    integer, parameter :: WINDOW_WIDTH  = 1000
     integer, parameter :: WINDOW_HEIGHT = 600
-    
-    ! Node structure
+
+    integer, parameter :: MAX_NODES = 32
+    integer, parameter :: MAX_CONNS = 128
+
+    ! Menu constants
+    integer, parameter :: MENU_RESET_VIEW  = 1
+    integer, parameter :: MENU_CLEAR_CONNS = 2
+    integer, parameter :: MENU_QUIT        = 3
+
     type :: node_type
-        real :: x, y          ! Position
-        real :: width, height ! Size
-        integer :: node_id    ! Node identifier
-        character(len=20) :: title
-        logical :: is_dragging ! Drag state
-        real :: color_r, color_g, color_b ! Node color
+        real :: x, y
+        real :: width, height
+        integer :: node_id
+        character(len=64) :: title
+        logical :: is_dragging
+        real :: color_r, color_g, color_b
+        character(len=200) :: image_path
+        integer :: texture_id
     end type node_type
-    
-    ! Global variables
-    type(node_type) :: nodes(6)
-    integer :: num_nodes
-    integer :: dragging_node
-    integer :: last_mouse_x, last_mouse_y
-    logical :: mouse_pressed
-    
-    ! Camera/view variables
+
+    type :: connection_type
+        integer :: from_node  ! node index (output port)
+        integer :: to_node    ! node index (input port)
+        logical :: active
+    end type connection_type
+
+    type(node_type) :: nodes(MAX_NODES)
+    integer :: num_nodes = 0
+
+    type(connection_type) :: connections(MAX_CONNS)
+    integer :: num_conns = 0
+
+    integer :: dragging_node = 0
+    logical :: mouse_pressed = .false.
+    logical :: pan_pressed = .false.
+    integer :: last_mouse_x = 0, last_mouse_y = 0
+
     real :: zoom_level = 1.0
     real :: pan_x = 0.0, pan_y = 0.0
 
+    ! Connection creation state
+    logical :: connect_mode = .false.
+    integer :: connect_from = 0  ! node index for output port when starting a connection
+contains
+    pure logical function point_in_rect(px, py, rx, ry, rw, rh)
+        real, intent(in) :: px, py, rx, ry, rw, rh
+        point_in_rect = (px >= rx .and. px <= rx + rw .and. py >= ry .and. py <= ry + rh)
+    end function point_in_rect
+
+    pure subroutine get_port_rect(idx, is_input, rx, ry, rw, rh)
+        integer, intent(in) :: idx
+        logical, intent(in) :: is_input
+        real, intent(out) :: rx, ry, rw, rh
+        real :: port_size, port_y
+        ! Enlarge hitbox for easier clicking
+        port_size = 16.0
+        ! y increases downward due to glOrtho(..., top=height, bottom=0)
+        port_y = nodes(idx)%y + nodes(idx)%height - 20.0
+        rw = port_size
+        rh = port_size
+        if (is_input) then
+            rx = nodes(idx)%x - port_size/2.0
+        else
+            rx = nodes(idx)%x + nodes(idx)%width - port_size/2.0
+        end if
+        ry = port_y - (port_size-10.0)/2.0   ! center vertically
+    end subroutine get_port_rect
 end module node_gui_data
 
-! Utility subroutines
+module gl_helpers
+    use node_gui_data
+    implicit none
+contains
+    subroutine draw_text(x, y, s)
+        use OpenGL
+        implicit none
+        real, intent(in) :: x, y
+        character(len=*), intent(in) :: s
+        integer :: i, n
+        character(len=1) :: c
+
+        call glRasterPos2f(x, y)
+        n = len_trim(s)
+        do i = 1, n
+            c = s(i:i)
+            call glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, iachar(c))
+        end do
+    end subroutine draw_text
+end module gl_helpers
+
+! ---------------------- Initialization ----------------------
 subroutine initialize_nodes()
     use node_gui_data
     implicit none
-    
+    integer :: i
+
     num_nodes = 6
     dragging_node = 0
     mouse_pressed = .false.
-    
-    ! Original Image Node
-    nodes(1)%x = 50.0
-    nodes(1)%y = 50.0
-    nodes(1)%width = 120.0
-    nodes(1)%height = 80.0
-    nodes(1)%node_id = 1
-    nodes(1)%title = 'Original Image'
-    nodes(1)%is_dragging = .false.
-    nodes(1)%color_r = 0.5
-    nodes(1)%color_g = 0.7
-    nodes(1)%color_b = 1.0
-    
-    ! Step01 Node
-    nodes(2)%x = 250.0
-    nodes(2)%y = 50.0
-    nodes(2)%width = 120.0
-    nodes(2)%height = 80.0
-    nodes(2)%node_id = 2
-    nodes(2)%title = 'Step01'
-    nodes(2)%is_dragging = .false.
-    nodes(2)%color_r = 0.8
-    nodes(2)%color_g = 0.1
-    nodes(2)%color_b = 0.2
-    
-    ! Step02 Node
-    nodes(3)%x = 450.0
-    nodes(3)%y = 50.0
-    nodes(3)%width = 120.0
-    nodes(3)%height = 80.0
-    nodes(3)%node_id = 3
-    nodes(3)%title = 'Step02'
-    nodes(3)%is_dragging = .false.
-    nodes(3)%color_r = 1.0
-    nodes(3)%color_g = 0.5
-    nodes(3)%color_b = 0.0
-    
-    ! Step03 Node
-    nodes(4)%x = 250.0
-    nodes(4)%y = 200.0
-    nodes(4)%width = 120.0
-    nodes(4)%height = 80.0
-    nodes(4)%node_id = 4
-    nodes(4)%title = 'Step03'
-    nodes(4)%is_dragging = .false.
-    nodes(4)%color_r = 0.2
-    nodes(4)%color_g = 0.8
-    nodes(4)%color_b = 0.2
-    
-    ! Step04 Node
-    nodes(5)%x = 450.0
-    nodes(5)%y = 200.0
-    nodes(5)%width = 120.0
-    nodes(5)%height = 80.0
-    nodes(5)%node_id = 5
-    nodes(5)%title = 'Step04'
-    nodes(5)%is_dragging = .false.
-    nodes(5)%color_r = 0.5
-    nodes(5)%color_g = 0.2
-    nodes(5)%color_b = 0.8
-    
-    ! Step05 Node
-    nodes(6)%x = 650.0
-    nodes(6)%y = 200.0
-    nodes(6)%width = 120.0
-    nodes(6)%height = 80.0
-    nodes(6)%node_id = 6
-    nodes(6)%title = 'Step05'
-    nodes(6)%is_dragging = .false.
-    nodes(6)%color_r = 0.9
-    nodes(6)%color_g = 0.1
-    nodes(6)%color_b = 0.6
-    
+    pan_pressed = .false.
+    connect_mode = .false.
+    connect_from = 0
+
+    do i = 1, MAX_CONNS
+        connections(i)%active = .false.
+        connections(i)%from_node = 0
+        connections(i)%to_node = 0
+    end do
+    num_conns = 0
+
+    nodes(1)%x = 60.0;  nodes(1)%y = 60.0
+    nodes(1)%width = 180.0; nodes(1)%height = 110.0
+    nodes(1)%node_id = 1; nodes(1)%title = 'Original Image'
+    nodes(1)%is_dragging = .false.; nodes(1)%color_r = 0.45; nodes(1)%color_g = 0.65; nodes(1)%color_b = 1.0
+
+    nodes(2)%x = 300.0; nodes(2)%y = 60.0
+    nodes(2)%width = 180.0; nodes(2)%height = 110.0
+    nodes(2)%node_id = 2; nodes(2)%title = 'Step01'
+    nodes(2)%is_dragging = .false.; nodes(2)%color_r = 0.8; nodes(2)%color_g = 0.1; nodes(2)%color_b = 0.2
+
+    nodes(3)%x = 540.0; nodes(3)%y = 60.0
+    nodes(3)%width = 180.0; nodes(3)%height = 110.0
+    nodes(3)%node_id = 3; nodes(3)%title = 'Step02'
+    nodes(3)%is_dragging = .false.; nodes(3)%color_r = 1.0; nodes(3)%color_g = 0.5; nodes(3)%color_b = 0.0
+
+    nodes(4)%x = 300.0; nodes(4)%y = 230.0
+    nodes(4)%width = 180.0; nodes(4)%height = 110.0
+    nodes(4)%node_id = 4; nodes(4)%title = 'Step03'
+    nodes(4)%is_dragging = .false.; nodes(4)%color_r = 0.2; nodes(4)%color_g = 0.8; nodes(4)%color_b = 0.2
+
+    nodes(5)%x = 540.0; nodes(5)%y = 230.0
+    nodes(5)%width = 180.0; nodes(5)%height = 110.0
+    nodes(5)%node_id = 5; nodes(5)%title = 'Step04'
+    nodes(5)%is_dragging = .false.; nodes(5)%color_r = 0.5; nodes(5)%color_g = 0.2; nodes(5)%color_b = 0.8
+
+    nodes(6)%x = 780.0; nodes(6)%y = 230.0
+    nodes(6)%width = 180.0; nodes(6)%height = 110.0
+    nodes(6)%node_id = 6; nodes(6)%title = 'Step05'
+    nodes(6)%is_dragging = .false.; nodes(6)%color_r = 0.9; nodes(6)%color_g = 0.1; nodes(6)%color_b = 0.6
 end subroutine initialize_nodes
 
+! ---------------------- Drawing ----------------------
 subroutine draw_grid()
     use OpenGL
     implicit none
     integer :: i
     real, parameter :: grid_size = 20.0
-    integer, parameter :: grid_lines = 50
-    
-    call glColor3f(0.25, 0.25, 0.3)
-    call glBegin(GL_LINES)
-    
-    ! Vertical lines
-    do i = 0, grid_lines
-        call glVertex2f(real(i) * grid_size, 0.0)
-        call glVertex2f(real(i) * grid_size, real(grid_lines) * grid_size)
-    end do
-    
-    ! Horizontal lines
-    do i = 0, grid_lines
-        call glVertex2f(0.0, real(i) * grid_size)
-        call glVertex2f(real(grid_lines) * grid_size, real(i) * grid_size)
-    end do
-    
-    call glEnd()
-    
-end subroutine draw_grid
+    integer, parameter :: grid_lines = 80
 
-subroutine draw_node(node_idx)
-    use OpenGL
-    use node_gui_data
-    implicit none
-    integer, intent(in) :: node_idx
-    real :: x1, y1, x2, y2
-    real :: brightness
-    
-    x1 = nodes(node_idx)%x
-    y1 = nodes(node_idx)%y
-    x2 = nodes(node_idx)%x + nodes(node_idx)%width
-    y2 = nodes(node_idx)%y + nodes(node_idx)%height
-    
-    ! Add brightness if being dragged
-    brightness = 1.0
-    if (nodes(node_idx)%is_dragging) brightness = 1.3
-    
-    ! Draw node background with gradient effect
-    call glBegin(GL_QUADS)
-    
-    ! Top edge (brighter)
-    call glColor3f(nodes(node_idx)%color_r * brightness, &
-                   nodes(node_idx)%color_g * brightness, &
-                   nodes(node_idx)%color_b * brightness)
-    call glVertex2f(x1, y1)
-    call glVertex2f(x2, y1)
-    
-    ! Bottom edge (darker)
-    call glColor3f(nodes(node_idx)%color_r * 0.7, &
-                   nodes(node_idx)%color_g * 0.7, &
-                   nodes(node_idx)%color_b * 0.7)
-    call glVertex2f(x2, y2)
-    call glVertex2f(x1, y2)
-    
+    call glColor3f(0.22, 0.22, 0.27)
+    call glBegin(GL_LINES)
+    do i = 0, grid_lines
+        call glVertex2f(real(i)*grid_size, 0.0)
+        call glVertex2f(real(i)*grid_size, real(grid_lines)*grid_size)
+    end do
+    do i = 0, grid_lines
+        call glVertex2f(0.0, real(i)*grid_size)
+        call glVertex2f(real(grid_lines)*grid_size, real(i)*grid_size)
+    end do
     call glEnd()
-    
-    ! Draw node border
-    call glColor3f(0.8, 0.8, 0.9)
-    call glLineWidth(2.0)
-    call glBegin(GL_LINE_LOOP)
-    call glVertex2f(x1, y1)
-    call glVertex2f(x2, y1)
-    call glVertex2f(x2, y2)
-    call glVertex2f(x1, y2)
-    call glEnd()
-    
-    ! Draw input/output ports
-    call draw_ports(node_idx)
-    
-    ! Draw node title (simplified - just a colored rectangle for now)
-    call glColor3f(1.0, 1.0, 1.0)
-    call glBegin(GL_QUADS)
-    call glVertex2f(x1 + 5, y1 + 5)
-    call glVertex2f(x2 - 5, y1 + 5)
-    call glVertex2f(x2 - 5, y1 + 20)
-    call glVertex2f(x1 + 5, y1 + 20)
-    call glEnd()
-    
-end subroutine draw_node
+end subroutine draw_grid
 
 subroutine draw_ports(node_idx)
     use OpenGL
     use node_gui_data
     implicit none
     integer, intent(in) :: node_idx
-    real :: port_size = 8.0
-    real :: input_x, output_x, port_y
-    
-    input_x = nodes(node_idx)%x - port_size/2
-    output_x = nodes(node_idx)%x + nodes(node_idx)%width - port_size/2
+    real :: port_size, input_x, output_x, port_y
+    port_size = 10.0
+    input_x = nodes(node_idx)%x - port_size/2.0
+    output_x = nodes(node_idx)%x + nodes(node_idx)%width - port_size/2.0
     port_y = nodes(node_idx)%y + nodes(node_idx)%height - 20.0
-    
-    ! Draw input port (blue)
+
+    ! input (blue) for nodes beyond first
     if (nodes(node_idx)%node_id > 1) then
         call glColor3f(0.3, 0.6, 1.0)
         call glBegin(GL_QUADS)
         call glVertex2f(input_x, port_y)
-        call glVertex2f(input_x + port_size, port_y)
-        call glVertex2f(input_x + port_size, port_y + port_size)
-        call glVertex2f(input_x, port_y + port_size)
+        call glVertex2f(input_x+port_size, port_y)
+        call glVertex2f(input_x+port_size, port_y+port_size)
+        call glVertex2f(input_x, port_y+port_size)
         call glEnd()
     end if
-    
-    ! Draw output port (orange) - all nodes have output
+
+    ! output (orange) for every node
     call glColor3f(1.0, 0.6, 0.2)
     call glBegin(GL_QUADS)
     call glVertex2f(output_x, port_y)
-    call glVertex2f(output_x + port_size, port_y)
-    call glVertex2f(output_x + port_size, port_y + port_size)
-    call glVertex2f(output_x, port_y + port_size)
+    call glVertex2f(output_x+port_size, port_y)
+    call glVertex2f(output_x+port_size, port_y+port_size)
+    call glVertex2f(output_x, port_y+port_size)
     call glEnd()
-    
 end subroutine draw_ports
 
-subroutine draw_connections()
-    use OpenGL
-    use node_gui_data
+subroutine bezier_point(p0x,p0y,p1x,p1y,p2x,p2y,p3x,p3y,t,x,y)
     implicit none
-    
-    call glColor3f(1.0, 1.0, 0.3)
-    call glLineWidth(3.0)
-    
-    ! Draw predefined connections (simplified)
-    call draw_bezier_line(1, 2)  ! Original -> Step01
-    call draw_bezier_line(2, 3)  ! Step01 -> Step02
-    call draw_bezier_line(1, 4)  ! Original -> Step03
-    call draw_bezier_line(2, 5)  ! Step01 -> Step04
-    call draw_bezier_line(5, 6)  ! Step04 -> Step05
-    
-end subroutine draw_connections
+    real, intent(in) :: p0x,p0y,p1x,p1y,p2x,p2y,p3x,p3y,t
+    real, intent(out) :: x,y
+    real :: u, tt, uu, uuu, ttt
+    u=1.0-t; tt=t*t; uu=u*u; uuu=uu*u; ttt=tt*t
+    x = uuu*p0x + 3.0*uu*t*p1x + 3.0*u*tt*p2x + ttt*p3x
+    y = uuu*p0y + 3.0*uu*t*p1y + 3.0*u*tt*p2y + ttt*p3y
+end subroutine bezier_point
 
 subroutine draw_bezier_line(node1_idx, node2_idx)
     use OpenGL
     use node_gui_data
     implicit none
     integer, intent(in) :: node1_idx, node2_idx
-    real :: start_x, start_y, end_x, end_y
-    real :: ctrl1_x, ctrl1_y, ctrl2_x, ctrl2_y
-    real :: t, x, y
-    integer :: i, segments = 20
-    
-    ! Calculate connection points
+    real :: start_x,start_y,end_x,end_y,ctrl1_x,ctrl1_y,ctrl2_x,ctrl2_y
+    real :: t,x,y
+    integer :: i, segments
+    segments = 24
+
     start_x = nodes(node1_idx)%x + nodes(node1_idx)%width
-    start_y = nodes(node1_idx)%y + nodes(node1_idx)%height - 20.0 + 4.0
-    end_x = nodes(node2_idx)%x
-    end_y = nodes(node2_idx)%y + nodes(node2_idx)%height - 20.0 + 4.0
-    
-    ! Calculate control points for bezier curve
-    ctrl1_x = start_x + 50.0
-    ctrl1_y = start_y
-    ctrl2_x = end_x - 50.0
-    ctrl2_y = end_y
-    
-    ! Draw bezier curve using line segments
+    start_y = nodes(node1_idx)%y + nodes(node1_idx)%height - 20.0 + 5.0
+    end_x   = nodes(node2_idx)%x
+    end_y   = nodes(node2_idx)%y + nodes(node2_idx)%height - 20.0 + 5.0
+
+    ctrl1_x = start_x + 60.0; ctrl1_y = start_y
+    ctrl2_x = end_x - 60.0;   ctrl2_y = end_y
+
     call glBegin(GL_LINE_STRIP)
     do i = 0, segments
-        t = real(i) / real(segments)
-        call bezier_point(start_x, start_y, ctrl1_x, ctrl1_y, &
-                        ctrl2_x, ctrl2_y, end_x, end_y, t, x, y)
-        call glVertex2f(x, y)
+        t = real(i)/real(segments)
+        call bezier_point(start_x,start_y,ctrl1_x,ctrl1_y,ctrl2_x,ctrl2_y,end_x,end_y,t,x,y)
+        call glVertex2f(x,y)
     end do
     call glEnd()
-    
 end subroutine draw_bezier_line
 
-subroutine bezier_point(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, t, x, y)
+subroutine draw_connections()
+    use OpenGL
+    use node_gui_data
     implicit none
-    real, intent(in) :: p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, t
-    real, intent(out) :: x, y
-    real :: u, tt, uu, uuu, ttt
-    
-    u = 1.0 - t
-    tt = t * t
-    uu = u * u
-    uuu = uu * u
-    ttt = tt * t
-    
-    x = uuu * p0x + 3 * uu * t * p1x + 3 * u * tt * p2x + ttt * p3x
-    y = uuu * p0y + 3 * uu * t * p1y + 3 * u * tt * p2y + ttt * p3y
-    
-end subroutine bezier_point
+    integer :: i
+    call glLineWidth(3.0)
+    call glColor3f(1.0, 1.0, 0.3)
+    do i = 1, num_conns
+        if (connections(i)%active) then
+            call draw_bezier_line(connections(i)%from_node, connections(i)%to_node)
+        end if
+    end do
+end subroutine draw_connections
 
-! Callback functions
+subroutine draw_node(node_idx)
+    use OpenGL
+    use node_gui_data
+    use gl_helpers
+    implicit none
+    integer, intent(in) :: node_idx
+    real :: x1,y1,x2,y2,brightness
+
+    x1 = nodes(node_idx)%x; y1 = nodes(node_idx)%y
+    x2 = nodes(node_idx)%x + nodes(node_idx)%width
+    y2 = nodes(node_idx)%y + nodes(node_idx)%height
+
+    brightness = 1.0
+    if (nodes(node_idx)%is_dragging) brightness = 1.25
+
+    ! background gradient (top bright -> bottom dark)
+    call glBegin(GL_QUADS)
+    call glColor3f(nodes(node_idx)%color_r*brightness, nodes(node_idx)%color_g*brightness, nodes(node_idx)%color_b*brightness)
+    call glVertex2f(x1,y1); call glVertex2f(x2,y1)
+    call glColor3f(nodes(node_idx)%color_r*0.7, nodes(node_idx)%color_g*0.7, nodes(node_idx)%color_b*0.7)
+    call glVertex2f(x2,y2); call glVertex2f(x1,y2)
+    call glEnd()
+
+    ! border
+    call glColor3f(0.85,0.85,0.92)
+    call glLineWidth(2.0)
+    call glBegin(GL_LINE_LOOP)
+    call glVertex2f(x1,y1); call glVertex2f(x2,y1); call glVertex2f(x2,y2); call glVertex2f(x1,y2)
+    call glEnd()
+
+    ! title background strip
+    call glColor3f(0.1, 0.1, 0.1)
+    call glBegin(GL_QUADS)
+    call glVertex2f(x1+4, y1+4); call glVertex2f(x2-4, y1+4)
+    call glVertex2f(x2-4, y1+22); call glVertex2f(x1+4, y1+22)
+    call glEnd()
+
+    ! title text
+    call glColor3f(1.0,1.0,1.0)
+    call draw_text(x1+8.0, y1+18.0, trim(nodes(node_idx)%title))
+
+    ! ports
+    call draw_ports(node_idx)
+end subroutine draw_node
+
+! ---------------------- Connection Management ----------------------
+subroutine add_connection(from_idx, to_idx)
+    use node_gui_data
+    implicit none
+    integer, intent(in) :: from_idx, to_idx
+    integer :: i
+
+    if (from_idx <= 0 .or. to_idx <= 0) return
+    if (from_idx == to_idx) return
+
+    ! Ensure not duplicated
+    do i = 1, num_conns
+        if (connections(i)%active) then
+            if (connections(i)%from_node == from_idx .and. connections(i)%to_node == to_idx) return
+        end if
+    end do
+
+    if (num_conns < MAX_CONNS) then
+        num_conns = num_conns + 1
+        connections(num_conns)%from_node = from_idx
+        connections(num_conns)%to_node = to_idx
+        connections(num_conns)%active = .true.
+        write(*,*) 'Connection added: ', from_idx, ' -> ', to_idx
+    else
+        write(*,*) 'Max connections reached.'
+    end if
+end subroutine add_connection
+
+subroutine clear_connections()
+    use node_gui_data
+    implicit none
+    integer :: i
+    do i = 1, num_conns
+        connections(i)%active = .false.
+    end do
+    num_conns = 0
+    write(*,*) 'All connections cleared.'
+end subroutine clear_connections
+
+! ---------------------- GLUT Callbacks ----------------------
 subroutine display() bind(C)
     use OpenGL
     use node_gui_data
     implicit none
     integer :: i
-    
-    ! Clear the screen
+
     call glClear(GL_COLOR_BUFFER_BIT + GL_DEPTH_BUFFER_BIT)
-    
-    ! Setup 2D orthographic projection
+
     call glMatrixMode(GL_PROJECTION)
     call glLoadIdentity()
     call glOrtho(0.0d0, dble(WINDOW_WIDTH), dble(WINDOW_HEIGHT), 0.0d0, -1.0d0, 1.0d0)
-    
+
     call glMatrixMode(GL_MODELVIEW)
     call glLoadIdentity()
-    
-    ! Apply zoom and pan
+
     call glScalef(zoom_level, zoom_level, 1.0)
     call glTranslatef(pan_x, pan_y, 0.0)
-    
-    ! Draw grid
+
     call draw_grid()
-    
-    ! Draw connections between nodes
     call draw_connections()
-    
-    ! Draw all nodes
+
     do i = 1, num_nodes
         call draw_node(i)
     end do
-    
-    ! Swap buffers
+
     call glutSwapBuffers()
-    
 end subroutine display
 
 subroutine reshape(width, height) bind(C)
     use OpenGL
     implicit none
     integer(GLint), intent(in), value :: width, height
-    
     call glViewport(0, 0, width, height)
     call glutPostRedisplay()
-    
 end subroutine reshape
-
-subroutine mouse_callback(button, state, x, y) bind(C)
-    use OpenGL
-    use node_gui_data
-    implicit none
-    integer(GLint), intent(in), value :: button, state, x, y
-    integer :: i
-    real :: node_x, node_y
-    
-    last_mouse_x = x
-    last_mouse_y = y
-    
-    if (button == GLUT_LEFT_BUTTON) then
-        if (state == GLUT_DOWN) then
-            mouse_pressed = .true.
-            
-            ! Convert screen coordinates to world coordinates
-            node_x = (real(x) / zoom_level) - pan_x
-            node_y = (real(y) / zoom_level) - pan_y
-            
-            ! Check if any node was clicked
-            do i = 1, num_nodes
-                if (node_x >= nodes(i)%x .and. node_x <= nodes(i)%x + nodes(i)%width .and. &
-                    node_y >= nodes(i)%y .and. node_y <= nodes(i)%y + nodes(i)%height) then
-                    dragging_node = i
-                    nodes(i)%is_dragging = .true.
-                    exit
-                end if
-            end do
-            
-        else if (state == GLUT_UP) then
-            mouse_pressed = .false.
-            
-            ! Stop dragging all nodes
-            do i = 1, num_nodes
-                nodes(i)%is_dragging = .false.
-            end do
-            dragging_node = 0
-            
-        end if
-    end if
-    
-    call glutPostRedisplay()
-    
-end subroutine mouse_callback
-
-subroutine motion_callback(x, y) bind(C)
-    use OpenGL
-    use node_gui_data
-    implicit none
-    integer(GLint), intent(in), value :: x, y
-    real :: dx, dy
-    
-    if (mouse_pressed .and. dragging_node > 0) then
-        dx = (real(x - last_mouse_x)) / zoom_level
-        dy = (real(y - last_mouse_y)) / zoom_level
-        
-        nodes(dragging_node)%x = nodes(dragging_node)%x + dx
-        nodes(dragging_node)%y = nodes(dragging_node)%y + dy
-        
-        call glutPostRedisplay()
-    end if
-    
-    last_mouse_x = x
-    last_mouse_y = y
-    
-end subroutine motion_callback
 
 subroutine keyboard_callback(key, x, y) bind(C)
     use OpenGL
@@ -429,29 +389,24 @@ subroutine keyboard_callback(key, x, y) bind(C)
     integer(GLubyte), intent(in), value :: key
     integer(GLint), intent(in), value :: x, y
     character :: char_key
-    
     char_key = char(key)
-    
+
     select case(char_key)
-    case('q', 'Q', char(27))  ! 'q', 'Q', or ESC to quit
+    case('q','Q', char(27))
         stop
-        
-    case('+', '=')  ! Zoom in
+    case('+','=' )
         zoom_level = zoom_level * 1.1
         call glutPostRedisplay()
-        
-    case('-', '_')  ! Zoom out
+    case('-','_' )
         zoom_level = zoom_level / 1.1
         call glutPostRedisplay()
-        
-    case('r', 'R')  ! Reset view
-        zoom_level = 1.0
-        pan_x = 0.0
-        pan_y = 0.0
+    case('r','R')
+        zoom_level = 1.0; pan_x = 0.0; pan_y = 0.0
         call glutPostRedisplay()
-        
+    case('c','C')
+        call clear_connections()
+        call glutPostRedisplay()
     end select
-    
 end subroutine keyboard_callback
 
 subroutine special_callback(key, x, y) bind(C)
@@ -460,78 +415,207 @@ subroutine special_callback(key, x, y) bind(C)
     implicit none
     integer(GLint), intent(in), value :: key, x, y
     real, parameter :: pan_speed = 10.0
-    
     select case(key)
-    case(GLUT_KEY_LEFT)
-        pan_x = pan_x + pan_speed
-        call glutPostRedisplay()
-        
-    case(GLUT_KEY_RIGHT)
-        pan_x = pan_x - pan_speed
-        call glutPostRedisplay()
-        
-    case(GLUT_KEY_UP)
-        pan_y = pan_y + pan_speed
-        call glutPostRedisplay()
-        
-    case(GLUT_KEY_DOWN)
-        pan_y = pan_y - pan_speed
-        call glutPostRedisplay()
-        
+    case(GLUT_KEY_LEFT);  pan_x = pan_x + pan_speed
+    case(GLUT_KEY_RIGHT); pan_x = pan_x - pan_speed
+    case(GLUT_KEY_UP);    pan_y = pan_y + pan_speed
+    case(GLUT_KEY_DOWN);  pan_y = pan_y - pan_speed
     end select
-    
+    call glutPostRedisplay()
 end subroutine special_callback
 
-! Main program
+subroutine mouse_callback(button, state, x, y) bind(C)
+    use OpenGL
+    use node_gui_data
+    implicit none
+    integer(GLint), intent(in), value :: button, state, x, y
+    integer :: i
+    real :: wx, wy
+    real :: rx, ry, rw, rh
+    logical :: hit
+
+    last_mouse_x = x; last_mouse_y = y
+
+    ! Convert to world coordinates (y grows downward)
+    wx = (real(x) / zoom_level) - pan_x
+    wy = (real(y) / zoom_level) - pan_y
+
+    if (state == GLUT_DOWN) then
+        select case (button)
+        case (GLUT_LEFT_BUTTON)
+            mouse_pressed = .true.
+
+            if (.not. connect_mode) then
+                ! 1) Start connect mode if output port clicked
+                do i = 1, num_nodes
+                    call get_port_rect(i, .false., rx, ry, rw, rh)  ! output port
+                    hit = point_in_rect(wx, wy, rx, ry, rw, rh)
+                    if (hit) then
+                        connect_mode = .true.
+                        connect_from = i
+                        write(*,*) 'Connect mode: from node ', i, ' (mouse=', wx, wy, ')'
+                        call glutPostRedisplay()
+                        return  ! ⭐ Do NOT cancel here; wait for next click
+                    end if
+                end do
+
+                ! If not connecting, try to start dragging node
+                do i = 1, num_nodes
+                    if (point_in_rect(wx, wy, nodes(i)%x, nodes(i)%y, nodes(i)%width, nodes(i)%height)) then
+                        dragging_node = i
+                        nodes(i)%is_dragging = .true.
+                        exit
+                    end if
+                end do
+            else
+                ! 2) We are in connect_mode: finalize if input port clicked
+                do i = 1, num_nodes
+                    if (nodes(i)%node_id > 1) then
+                        call get_port_rect(i, .true., rx, ry, rw, rh)  ! input port
+                        write(*,*) 'Check input node ', i, ' rect=(', rx, ry, rw, rh, ') mouse=(', wx, wy, ')'
+                        hit = point_in_rect(wx, wy, rx, ry, rw, rh)
+                        if (hit) then
+                            call add_connection(connect_from, i)
+                            connect_mode = .false.
+                            connect_from = 0
+                            call glutPostRedisplay()
+                            return
+                        end if
+                    end if
+                end do
+                ! 2b) Clicked elsewhere: cancel connect mode
+                write(*,*) 'Connect mode cancelled (clicked empty).'
+                connect_mode = .false.
+                connect_from = 0
+            end if
+
+        case (GLUT_MIDDLE_BUTTON)
+            pan_pressed = .true.
+
+        case (3)  ! wheel up (FreeGLUT)
+            zoom_level = zoom_level * 1.1
+            call glutPostRedisplay()
+        case (4)  ! wheel down
+            zoom_level = zoom_level / 1.1
+            call glutPostRedisplay()
+        end select
+
+    else if (state == GLUT_UP) then
+        select case (button)
+        case (GLUT_LEFT_BUTTON)
+            mouse_pressed = .false.
+            if (dragging_node > 0) then
+                nodes(dragging_node)%is_dragging = .false.
+                dragging_node = 0
+            end if
+        case (GLUT_MIDDLE_BUTTON)
+            pan_pressed = .false.
+        end select
+    end if
+end subroutine mouse_callback
+
+subroutine motion_callback(x, y) bind(C)
+    use OpenGL
+    use node_gui_data
+    implicit none
+    integer(GLint), intent(in), value :: x, y
+    real :: dx, dy
+
+    if (mouse_pressed .and. dragging_node > 0) then
+        dx = (real(x - last_mouse_x)) / zoom_level
+        dy = (real(y - last_mouse_y)) / zoom_level
+        nodes(dragging_node)%x = nodes(dragging_node)%x + dx
+        nodes(dragging_node)%y = nodes(dragging_node)%y + dy
+        call glutPostRedisplay()
+    else if (pan_pressed) then
+        dx = (real(x - last_mouse_x)) / zoom_level
+        dy = (real(y - last_mouse_y)) / zoom_level
+        pan_x = pan_x + dx
+        pan_y = pan_y + dy
+        call glutPostRedisplay()
+    end if
+
+    last_mouse_x = x; last_mouse_y = y
+end subroutine motion_callback
+
+! ---------------------- Menus ----------------------
+subroutine menu_handler(value) bind(C)
+    use OpenGL
+    use node_gui_data
+    use iso_c_binding
+    implicit none
+    integer(c_int), value :: value
+
+    select case (value)
+    case (MENU_RESET_VIEW)
+        zoom_level = 1.0; pan_x = 0.0; pan_y = 0.0
+        call glutPostRedisplay()
+    case (MENU_CLEAR_CONNS)
+        call clear_connections()
+        call glutPostRedisplay()
+    case (MENU_QUIT)
+        stop
+    end select
+end subroutine menu_handler
+
+subroutine create_glut_menu()
+    use OpenGL
+    use node_gui_data
+    use iso_c_binding
+    implicit none
+    integer(c_int) :: menu_id
+    external :: menu_handler   ! declare callback procedure
+
+    menu_id = glutCreateMenu(menu_handler)
+    call glutAddMenuEntry('Reset View (R)', MENU_RESET_VIEW)
+    call glutAddMenuEntry('Clear Connections (C)', MENU_CLEAR_CONNS)
+    call glutAddMenuEntry('Quit (Q)', MENU_QUIT)
+    call glutAttachMenu(GLUT_RIGHT_BUTTON)
+end subroutine create_glut_menu
+
+! ---------------------- Main ----------------------
 program node_gui_opengl
     use OpenGL
     use node_gui_data
     implicit none
-    
-    integer :: argc = 1
-    character(len=32) :: argv = 'node_gui'
-    
-    ! Declare external callback functions
+    integer :: argc
+    character(len=32) :: argv
+
     external :: display, reshape, mouse_callback, motion_callback
     external :: keyboard_callback, special_callback
-    
-    ! Initialize nodes
+    external :: menu_handler
+
     call initialize_nodes()
-    
-    ! Initialize GLUT
+
+    argc = 1
+    argv = 'node_gui'//char(0)
+
     call glutInit(argc, loc(argv))
     call glutInitDisplayMode(GLUT_DOUBLE + GLUT_RGB + GLUT_DEPTH)
     call glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT)
     call glutInitWindowPosition(100, 100)
-    
-    ! Create window
-    if (glutCreateWindow('Node-based Image Processing - OpenGL') == 0) then
+
+    if (glutCreateWindow('Node-based Image Processing - OpenGL (Fortran)') == 0) then
         write(*,*) 'Error creating window'
         stop
     end if
-    
-    ! Set callback functions
+
     call glutDisplayFunc(display)
     call glutReshapeFunc(reshape)
     call glutMouseFunc(mouse_callback)
     call glutMotionFunc(motion_callback)
     call glutKeyboardFunc(keyboard_callback)
     call glutSpecialFunc(special_callback)
-    
-    ! Enable depth testing
+
     call glEnable(GL_DEPTH_TEST)
     call glDepthFunc(GL_LEQUAL)
-    
-    ! Set clear color (dark background)
-    call glClearColor(0.15, 0.15, 0.2, 1.0)
-    
-    ! Enable blending for smooth lines
+    call glClearColor(0.15, 0.15, 0.20, 1.0)
+
     call glEnable(GL_BLEND)
     call glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     call glEnable(GL_LINE_SMOOTH)
-    call glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-    
-    ! Start the main loop
+
+    call create_glut_menu()
+
     call glutMainLoop()
-    
 end program node_gui_opengl

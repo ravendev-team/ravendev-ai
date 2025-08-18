@@ -1,4 +1,4 @@
-G95 module created on Tue Aug 19 01:59:08 2025 from node_gui03.f90
+G95 module created on Tue Aug 19 01:59:10 2025 from node_gui03.f90
 If you edit this, you'll get what you deserve.
 module-version 9
 (() () () () () () () () () () () () () () () () () () () () ())
@@ -152,91 +152,102 @@ NONE NONE DIMENSION) (DERIVED 49) 0 0 () (1 EXPLICIT (CONSTANT (INTEGER
 4) 0 '1') (CONSTANT (INTEGER 4) 0 '128')) () '' () ())
 54 'dragging_node' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (INTEGER 4) 0 0 () () () '' () ())
-55 'get_port_rect' 'node_gui_data' 1 ((PROCEDURE UNKNOWN MODULE-PROC
-DECL NONE NONE SUBROUTINE PURE) (PROCEDURE 0) 0 0 (56 NONE 57 NONE 58
-NONE 59 NONE 60 NONE 61 NONE) () () '' () ())
-62 'iso_c_binding' 'iso_c_binding' 1 ((MODULE UNKNOWN UNKNOWN UNKNOWN
+55 'draw_text' 'gl_helpers' 1 ((PROCEDURE UNKNOWN MODULE-PROC DECL NONE
+NONE SUBROUTINE) (PROCEDURE 0) 0 0 (56 NONE 57 NONE 58 NONE) () () '' ()
+())
+59 'get_port_rect' 'node_gui_data' 1 ((PROCEDURE UNKNOWN MODULE-PROC
+DECL NONE NONE SUBROUTINE PURE) (PROCEDURE 0) 0 0 (60 NONE 61 NONE 62
+NONE 63 NONE 64 NONE 65 NONE) () () '' () ())
+66 'gl_helpers' 'gl_helpers' 1 ((MODULE UNKNOWN UNKNOWN UNKNOWN NONE
+NONE) (UNKNOWN) 0 0 () () () '' () ())
+67 'iso_c_binding' 'iso_c_binding' 1 ((MODULE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (UNKNOWN) 0 0 () () () '' () ())
-63 'last_mouse_x' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
+68 'last_mouse_x' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (INTEGER 4) 0 0 () () () '' () ())
-64 'last_mouse_y' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
+69 'last_mouse_y' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (INTEGER 4) 0 0 () () () '' () ())
-65 'max_conns' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
+70 'max_conns' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '128') () () '' ()
 ())
-66 'max_nodes' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
+71 'max_nodes' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '32') () () '' ()
 ())
-67 'menu_clear_conns' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN
+72 'menu_clear_conns' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN
 UNKNOWN NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '2') () ()
 '' () ())
-68 'menu_quit' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
+73 'menu_quit' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '3') () () '' () ())
-69 'menu_reset_view' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN
+74 'menu_reset_view' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN
 UNKNOWN NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '1') () ()
 '' () ())
-70 'mouse_pressed' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
+75 'mouse_pressed' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (LOGICAL 4) 0 0 () () () '' () ())
-71 'node_gui_data' 'node_gui_data' 1 ((MODULE UNKNOWN UNKNOWN UNKNOWN
+76 'node_gui_data' 'node_gui_data' 1 ((MODULE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (UNKNOWN) 0 0 () () () '' () ())
-72 'node_type' 'node_gui_data' 1 ((DERIVED UNKNOWN UNKNOWN UNKNOWN NONE
-NONE) (UNKNOWN) 0 0 () () () '' ((73 'x' (REAL 4) () () 0 0 0 ()) (74 'y'
-(REAL 4) () () 0 0 0 ()) (75 'width' (REAL 4) () () 0 0 0 ()) (76 'height'
-(REAL 4) () () 0 0 0 ()) (77 'node_id' (INTEGER 4) () () 0 0 0 ()) (78
+77 'node_type' 'node_gui_data' 1 ((DERIVED UNKNOWN UNKNOWN UNKNOWN NONE
+NONE) (UNKNOWN) 0 0 () () () '' ((78 'x' (REAL 4) () () 0 0 0 ()) (79 'y'
+(REAL 4) () () 0 0 0 ()) (80 'width' (REAL 4) () () 0 0 0 ()) (81 'height'
+(REAL 4) () () 0 0 0 ()) (82 'node_id' (INTEGER 4) () () 0 0 0 ()) (83
 'title' (CHARACTER 1 ((CONSTANT (INTEGER 4) 0 '64'))) () () 0 0 0 ()) (
-79 'is_dragging' (LOGICAL 4) () () 0 0 0 ()) (80 'color_r' (REAL 4) () ()
-0 0 0 ()) (81 'color_g' (REAL 4) () () 0 0 0 ()) (82 'color_b' (REAL 4)
-() () 0 0 0 ()) (83 'image_path' (CHARACTER 1 ((CONSTANT (INTEGER 4) 0
-'200'))) () () 0 0 0 ()) (84 'texture_id' (INTEGER 4) () () 0 0 0 ()))
+84 'is_dragging' (LOGICAL 4) () () 0 0 0 ()) (85 'color_r' (REAL 4) () ()
+0 0 0 ()) (86 'color_g' (REAL 4) () () 0 0 0 ()) (87 'color_b' (REAL 4)
+() () 0 0 0 ()) (88 'image_path' (CHARACTER 1 ((CONSTANT (INTEGER 4) 0
+'200'))) () () 0 0 0 ()) (89 'texture_id' (INTEGER 4) () () 0 0 0 ()))
 PUBLIC ())
-85 'nodes' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
-NONE DIMENSION) (DERIVED 72) 0 0 () (1 EXPLICIT (CONSTANT (INTEGER 4) 0
+90 'nodes' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
+NONE DIMENSION) (DERIVED 77) 0 0 () (1 EXPLICIT (CONSTANT (INTEGER 4) 0
 '1') (CONSTANT (INTEGER 4) 0 '32')) () '' () ())
-86 'num_conns' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
+91 'num_conns' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
 NONE) (INTEGER 4) 0 0 () () () '' () ())
-87 'num_nodes' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
+92 'num_nodes' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
 NONE) (INTEGER 4) 0 0 () () () '' () ())
-88 'pan_pressed' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
+93 'pan_pressed' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (LOGICAL 4) 0 0 () () () '' () ())
-89 'pan_x' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
+94 'pan_x' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
 NONE) (REAL 4) 0 0 () () () '' () ())
-90 'pan_y' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
+95 'pan_y' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN NONE
 NONE) (REAL 4) 0 0 () () () '' () ())
-91 'point_in_rect' 'node_gui_data' 1 ((PROCEDURE UNKNOWN MODULE-PROC
-DECL NONE NONE FUNCTION PURE) (LOGICAL 4) 0 0 (92 NONE 93 NONE 94 NONE
-95 NONE 96 NONE 97 NONE) () () '' () ())
-98 'window_height' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
-NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '600') () () '' ()
-())
-99 'window_width' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
+96 'point_in_rect' 'node_gui_data' 1 ((PROCEDURE UNKNOWN MODULE-PROC
+DECL NONE NONE FUNCTION PURE) (LOGICAL 4) 0 0 (97 NONE 98 NONE 99 NONE
+100 NONE 101 NONE 102 NONE) () () '' () ())
+103 'window_height' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN
+UNKNOWN NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '600') ()
+() '' () ())
+104 'window_width' 'node_gui_data' 1 ((PARAMETER UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (INTEGER 4) 0 0 () (CONSTANT (INTEGER 4) 0 '1000') () () '' ()
 ())
-100 'zoom_level' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
+105 'zoom_level' 'node_gui_data' 1 ((VARIABLE UNKNOWN UNKNOWN UNKNOWN
 NONE NONE) (REAL 4) 0 0 () () () '' () ())
-97 'rh' '' 101 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
-0 () () () '' () ())
-96 'rw' '' 101 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
-0 () () () '' () ())
-95 'ry' '' 101 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
-0 () () () '' () ())
-94 'rx' '' 101 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
-0 () () () '' () ())
-93 'py' '' 101 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
-0 () () () '' () ())
-92 'px' '' 101 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
-0 () () () '' () ())
-61 'rh' '' 102 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
+102 'rh' '' 106 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
 0 0 () () () '' () ())
-60 'rw' '' 102 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
+101 'rw' '' 106 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
 0 0 () () () '' () ())
-59 'ry' '' 102 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
+100 'ry' '' 106 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
 0 0 () () () '' () ())
-58 'rx' '' 102 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
+99 'rx' '' 106 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
+0 () () () '' () ())
+98 'py' '' 106 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
+0 () () () '' () ())
+97 'px' '' 106 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
+0 () () () '' () ())
+65 'rh' '' 107 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
 0 0 () () () '' () ())
-57 'is_input' '' 102 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (
+64 'rw' '' 107 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
+0 0 () () () '' () ())
+63 'ry' '' 107 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
+0 0 () () () '' () ())
+62 'rx' '' 107 ((VARIABLE OUT UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4)
+0 0 () () () '' () ())
+61 'is_input' '' 107 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (
 LOGICAL 4) 0 0 () () () '' () ())
-56 'idx' '' 102 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (INTEGER
+60 'idx' '' 107 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (INTEGER
 4) 0 0 () () () '' () ())
+58 's' '' 108 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (CHARACTER
+1 (())) 0 0 () () () '' () ())
+57 'y' '' 108 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
+0 () () () '' () ())
+56 'x' '' 108 ((VARIABLE IN UNKNOWN UNKNOWN NONE NONE DUMMY) (REAL 4) 0
+0 () () () '' () ())
 34 'c_ptr' '(intrinsic-module)' 1 ((DERIVED UNKNOWN UNKNOWN UNKNOWN
 C_PTR NONE) (UNKNOWN) 0 0 () () () '' () ())
 16 'c_funptr' '(intrinsic-module)' 1 ((DERIVED UNKNOWN UNKNOWN UNKNOWN
@@ -256,11 +267,11 @@ C_FUNPTR NONE) (UNKNOWN) 0 0 () () () '' () ())
 'c_new_line' 0 39 'c_null_char' 0 40 'c_null_funptr' 0 41 'c_null_ptr' 0
 42 'c_ptr' 0 34 'c_short' 0 43 'c_signed_char' 0 44 'c_size_t' 0 45
 'c_vertical_tab' 0 46 'connect_from' 0 47 'connect_mode' 0 48
-'connection_type' 0 49 'connections' 0 53 'dragging_node' 0 54
-'get_port_rect' 0 55 'iso_c_binding' 0 62 'last_mouse_x' 0 63
-'last_mouse_y' 0 64 'max_conns' 0 65 'max_nodes' 0 66 'menu_clear_conns'
-0 67 'menu_quit' 0 68 'menu_reset_view' 0 69 'mouse_pressed' 0 70
-'node_gui_data' 0 71 'node_type' 0 72 'nodes' 0 85 'num_conns' 0 86
-'num_nodes' 0 87 'pan_pressed' 0 88 'pan_x' 0 89 'pan_y' 0 90
-'point_in_rect' 0 91 'window_height' 0 98 'window_width' 0 99 'zoom_level'
-0 100)
+'connection_type' 0 49 'connections' 0 53 'dragging_node' 0 54 'draw_text'
+0 55 'get_port_rect' 0 59 'gl_helpers' 0 66 'iso_c_binding' 0 67
+'last_mouse_x' 0 68 'last_mouse_y' 0 69 'max_conns' 0 70 'max_nodes' 0
+71 'menu_clear_conns' 0 72 'menu_quit' 0 73 'menu_reset_view' 0 74
+'mouse_pressed' 0 75 'node_gui_data' 0 76 'node_type' 0 77 'nodes' 0 90
+'num_conns' 0 91 'num_nodes' 0 92 'pan_pressed' 0 93 'pan_x' 0 94 'pan_y'
+0 95 'point_in_rect' 0 96 'window_height' 0 103 'window_width' 0 104
+'zoom_level' 0 105)
