@@ -1,3 +1,5 @@
+// Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+//           https://github.com/ravendev-team/ravendev-ai
 #define UNICODE
 #define _UNICODE
 #include <windows.h>
@@ -1413,4 +1415,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     ShutdownGDIPlus();
     
     return (int)msg.wParam;
+
 }
