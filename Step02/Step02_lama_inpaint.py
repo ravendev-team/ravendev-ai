@@ -1,3 +1,6 @@
+## Made by : ravendev ( dwfree74@naver.com / elca6659@gmail.com)
+##           https://github.com/ravendev-team/ravendev-ai 
+#
 # pip install torch torchvision pillow numpy
 #
 # **마스크 팽창 → 텐서 변환 → 인페인팅 → 후처리(원본 영역 보존 + 블러링)**까지 통합한 예제 코드
@@ -90,3 +93,4 @@ def inpaint_with_lama(image_path, mask_path, model_path="models/big-lama.pt", ou
 
 if __name__ == "__main__":
     inpaint_with_lama("input/background.png", "input/debug_full_mask.png")
+
