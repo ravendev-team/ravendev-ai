@@ -23,8 +23,13 @@ images 폴더에 위치시키고 각 Step 별 상황에 맞게 노드 베이스�
 
 * png 파일들은 bmp 로 변환해서 저장, gif 파일들은 제외 
 
-<img src = 'https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUIfor/GuideUIfor_sc02.gif' />
+Ver-0.5.1
 
+<img src = 'https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUIfor/GuideUIfor_sc02.gif' /> 
+
+Ver-0.5.2
+
+<img src= 'https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUIfor/2025-08-19-sc02.gif' />  
 
 ( Step 노드에 문자표시 안됨, 이미지 와 gif 이미지 로딩 미지원, input output 라인 연결기능 제거기능 안됨, 메뉴기능 지원안됨 등의 문제가 남아있음 )
 
