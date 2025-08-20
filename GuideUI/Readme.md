@@ -4,6 +4,9 @@
 
 SharpDevelop 5.1 C# : https://sourceforge.net/projects/sharpdevelop/
 
+UI 참고 : https://ciesie.com/post/node_based_gui/
+
+
 2. 사용된 이미지파일들
 
 Step01, Step02, Step03, Step04, Step05 의 각 스텝별 input, output 이미지들을
