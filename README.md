@@ -25,7 +25,7 @@ GuideUILaz : Lazarus 소스
 
 GuideUIdevcpp : dev-cpp 소스
 
-GuideUIfor : fortran(g95)  소스
+GuideUIfor : fortran(g95)  소스 - 진행율 52%
 
 GuideUIPas : pascal (PascalABC.net) 소스
 
