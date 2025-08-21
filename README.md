@@ -17,17 +17,17 @@ Step05 : MultiView 8장의 이미지들로 3D 객체를 생성합니다.
 
 [2] GuideUI 소스폴더 : AI Python 소스코드들 수행후의 input, output 결과물을 한눈에 파악가능한 UI를 각 개발언어 툴 로 컨버전 한 소스코드 폴더 
 
-GuideUI : C# 소스폴더
+GuideUI : C# 소스
 
-GuideUIJava : Java 소스폴더
+GuideUIJava : Java 소스
 
-GuideUILaz : Lazarus 소스폴더
+GuideUILaz : Lazarus 소스
 
-GuideUIdevcpp : dev-cpp 소스폴더
+GuideUIdevcpp : dev-cpp 소스
 
-GuideUIfor : fortran(g95)  소스폴더
+GuideUIfor : fortran(g95)  소스
 
-GuideUIPas : pascal (PascalABC.net) 소스폴더
+GuideUIPas : pascal (PascalABC.net) 소스
 
 
 * GuideUI 부연설명
