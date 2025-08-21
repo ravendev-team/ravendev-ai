@@ -1,17 +1,43 @@
 # ravendev-ai
 [ 2D이미지로부터의자유 프로젝트 ]
 
+* 폴더설명
+
+[1] Python 소스폴더 : AI 모델을 각각 활용한 소스코드 폴더
+
+Step01 : 원본 이미지에서 배경, 객체, 객체 마스크 이렇게 3개 이미지 분리합니다.
+
+Step02 : 원본 이미지에서 객체가 분리된 배경 이미지와 객체 마스크 이미지를 가지고 배경이미지를 복원(inpainting) 합니다.
+
+Step03 : 원본이미지에서 영역을 지정하면 그 영역에 emoji 이미지로 모자이크 처리해서 저장합니다.
+
+Step04 : Step01 output중 배경이 분리된 객체이미지 1장 -> zero123plus 모델을 사용해서 MultiView 8장의 이미지와 gif 파일을 생성합니다.
+
+Step05 : MultiView 8장의 이미지들로 3D 객체를 생성합니다.
+
+[2] GuideUI 소스폴더 : AI Python 소스코드들 수행후의 input, output 결과물을 한눈에 파악가능한 UI를 각 개발언어 툴 로 컨버전 한 소스코드 폴더 
+
+GuideUI : C# 소스폴더
+
+GuideUIJava : Java 소스폴더
+
+GuideUILaz : Lazarus 소스폴더
+
+GuideUIdevcpp : dev-cpp 소스폴더
+
+GuideUIfor : fortran(g95)  소스폴더
+
+GuideUIPas : pascal (PascalABC.net) 소스폴더
+
+
+* GuideUI 부연설명
+
 GPU가 아닌 CPU 베이스로 AI 관련 모델과 알고리즘을 적용하다 보니  각 Step별로 실행후 결과물이 오래 걸리는 Step도 있어서
 
 input 이미지들과 output 이미지들을 취합하여서 GuideUI 에서 한눈에 알아보기 쉽게 적용해 봤습니다.
 
 
 <img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13.gif' />
-
-<img src='https://raw.githubusercontent.com/ravendev-team/ravendev-ai/refs/heads/main/GuideUI/GuideUI_2025-08-13_02.gif' />
-
-
-
 
 
 
