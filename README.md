@@ -3,6 +3,7 @@
 
 * 폴더설명
 
+
 [1] Python 소스폴더 : AI 모델을 각각 활용한 소스코드 폴더
 
 Step01 : 원본 이미지에서 배경, 객체, 객체 마스크 이렇게 3개 이미지 분리합니다.
@@ -14,6 +15,8 @@ Step03 : 원본이미지에서 영역을 지정하면 그 영역에 emoji 이미
 Step04 : Step01 output중 배경이 분리된 객체이미지 1장 -> zero123plus 모델을 사용해서 MultiView 8장의 이미지와 gif 파일을 생성합니다.
 
 Step05 : MultiView 8장의 이미지들로 3D 객체를 생성합니다.
+
+
 
 [2] GuideUI 소스폴더 : AI Python 소스코드들 수행후의 input, output 결과물을 한눈에 파악가능한 UI를 각 개발언어 툴 로 컨버전 한 소스코드 폴더 
 
@@ -41,6 +44,8 @@ input 이미지들과 output 이미지들을 취합하여서 GuideUI 에서 한�
 
 
 
+
+
 [ 검토 AI 관련기술 사이트 리스트 ]
 
 1. Rembg는 이미지 배경을 제거하는 도구입니다.
@@ -64,6 +69,8 @@ https://github.com/SUDO-AI-3D/zero123plus
 https://github.com/Tencent-Hunyuan/Hunyuan3D-2
 
 ...
+
+
 
 
 [ 사용된 개발툴 유틸 정보 ]
